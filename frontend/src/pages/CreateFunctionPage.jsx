@@ -12,7 +12,7 @@ const CreateFunctionPage = () => {
   // Your function logic here
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: "Hello from FaaS!" }),
+    body: JSON.stringify({ message: "Hello from CloudServe Functions!" }),
   };
 };`);
   const [error, setError] = useState("");

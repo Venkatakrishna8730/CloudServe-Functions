@@ -8,7 +8,6 @@ import {
   LogOut,
   User,
   X,
-  Zap,
 } from "lucide-react";
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,19 +48,17 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
       className={clsx(
         "fixed inset-y-0 left-0 z-[9999] bg-card border-r border-border-light flex flex-col",
         isMobileMenuOpen
-          ? "translate-x-0 !w-64"
+          ? "translate-x-0 !w-72"
           : "-translate-x-full md:translate-x-0"
       )}
     >
       {/* Header */}
       <div className="h-16 flex items-center px-4 border-b border-border-light overflow-hidden whitespace-nowrap">
         <div className="flex items-center gap-3 min-w-max">
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-            <Zap size={20} className="fill-current" />
-          </div>
+          <img src="/icon.png" alt="Logo" className="w-8 h-8 object-contain" />
           <motion.span
             animate={{ opacity: isHovered || isMobileMenuOpen ? 1 : 0 }}
-            className="text-xl font-bold text-primary"
+            className="text-lg font-bold text-primary"
           >
             CloudServe Functions
           </motion.span>

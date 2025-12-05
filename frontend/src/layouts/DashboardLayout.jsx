@@ -24,7 +24,12 @@ const DashboardLayout = () => {
           >
             <Menu size={24} />
           </button>
-          <span className="ml-4 text-lg font-bold text-primary">
+          <img
+            src="/icon.png"
+            alt="Logo"
+            className="w-6 h-6 object-contain ml-4"
+          />
+          <span className="ml-2 text-lg font-bold text-primary">
             CloudServe Functions
           </span>
         </header>

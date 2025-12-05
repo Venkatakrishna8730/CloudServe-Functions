@@ -69,7 +69,11 @@ const LoginPage = () => {
             to="/"
             className="inline-flex items-center gap-2 text-2xl font-bold text-primary mb-2"
           >
-            <Zap className="fill-current" />
+            <img
+              src="/icon.png"
+              alt="Logo"
+              className="w-8 h-8 object-contain"
+            />
             CloudServe Functions
           </Link>
           <h2 className="text-xl text-text-primary font-semibold">

@@ -7,7 +7,11 @@ const LandingPage = () => {
     <div className="flex flex-col min-h-screen">
       <header className="px-4 md:px-6 h-16 md:h-20 flex items-center justify-between border-b border-border-light bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="text-xl md:text-2xl font-bold text-primary flex items-center gap-2">
-          <Zap className="fill-current w-5 h-5 md:w-6 md:h-6" />
+          <img
+            src="/icon.png"
+            alt="CloudServe Logo"
+            className="w-8 h-8 md:w-10 md:h-10 object-contain"
+          />
           CloudServe Functions
         </div>
         <div className="flex items-center gap-3 md:gap-4">
@@ -44,8 +48,8 @@ const LandingPage = () => {
             className="text-lg md:text-xl text-text-secondary mb-8 md:mb-10 max-w-2xl mx-auto"
           >
             Focus on your code. We handle the infrastructure, scaling, and
-            execution. The developer-first FaaS platform you've been waiting
-            for.
+            execution. The developer-first CloudServe Functions you've been
+            waiting for.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -92,8 +92,8 @@ const ProfilePage = () => {
           </div>
           <div className="p-6">
             <p className="text-text-secondary mb-4">
-              Your API key is used to authenticate requests to the FaaS platform
-              CLI and API. Keep it secret!
+              Your API key is used to authenticate requests to the CloudServe
+              Functions CLI and API. Keep it secret!
             </p>
             <div className="bg-background border border-border-light rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <code className="font-mono text-primary text-sm break-all w-full sm:w-auto">
