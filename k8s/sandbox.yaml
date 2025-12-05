@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sandbox
+  template:
+    metadata:
+      labels:
+        app: sandbox
+    spec:
+      containers:
+        - name: sandbox
+          image: ghcr.io/your_username/cloudserve-sandbox:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5002
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: backend-secrets
+          env:
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/serverless"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox-service
+spec:
+  selector:
+    app: sandbox
+  ports:
+    - port: 5002
+      targetPort: 5002
