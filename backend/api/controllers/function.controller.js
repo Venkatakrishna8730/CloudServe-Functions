@@ -24,9 +24,6 @@ const functionDeploy = async (req, res) => {
     const functionId = new mongoose.Types.ObjectId();
     const sourceHash = generateHash(code);
 
-    // Upload original code
-    // Assuming code is a single file content for now, or we can handle multiple files if req.body has them
-    // For now, treating 'code' as the content of 'index.js'
     const sourcePath = await uploadOriginalCode(functionId.toString(), [
       { name: "index.js", content: code },
     ]);
@@ -88,7 +85,6 @@ const getFunctionWithId = async (req, res) => {
     let code = "";
     try {
       const files = await readOriginalFiles(functionWithId._id.toString());
-      // Assuming single file for now or finding index.js
       const mainFile = files.find((f) => f.name === "index.js") || files[0];
       if (mainFile) {
         code = mainFile.content;
@@ -141,7 +137,6 @@ const updateFunction = async (req, res) => {
 
       await uploadBundle(functionId, bundledCode);
 
-      // Paths shouldn't change, but we can update them just in case or increment version
       updateData.version = (await Function.findById(functionId)).version + 1;
     }
 

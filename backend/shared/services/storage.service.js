@@ -1,6 +1,5 @@
 import "../utils/env.js";
 import * as Minio from "minio";
-import path from "path";
 
 const minioClient = new Minio.Client({
   endPoint: (process.env.MINIO_ENDPOINT || "localhost").trim(),

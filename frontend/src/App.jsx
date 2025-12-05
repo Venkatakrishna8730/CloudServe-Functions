@@ -98,7 +98,12 @@ const ProtectedRoute = () => {
 
 const App = () => {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider
+      clientId={
+        window.env?.VITE_GOOGLE_CLIENT_ID ||
+        import.meta.env.VITE_GOOGLE_CLIENT_ID
+      }
+    >
       <Provider store={store}>
         <ThemeProvider>
           <ToastProvider>

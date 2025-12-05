@@ -15,7 +15,7 @@ const sendVerificationEmail = async (email, code) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Verify your FaaS Platform Account",
+    subject: "Verify your CloudServe Function Account",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Verify your email address</h2>

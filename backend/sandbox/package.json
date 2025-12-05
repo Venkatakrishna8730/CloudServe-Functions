@@ -4,11 +4,12 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node sandbox/server.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "esbuild": "^0.27.1",
     "minio": "^8.0.6",
     "nodemon": "^3.1.11",
     "vm2": "^3.10.0"

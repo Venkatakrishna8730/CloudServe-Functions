@@ -3,7 +3,6 @@ import generateToken from "../../shared/utils/token.util.js";
 import { clearCookie, setCookie } from "../../shared/utils/cookie.util.js";
 import generateApiKey from "../../shared/utils/apikey.util.js";
 import sendVerificationEmail from "../services/email.service.js";
-import crypto from "crypto";
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;

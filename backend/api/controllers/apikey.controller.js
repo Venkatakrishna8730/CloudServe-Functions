@@ -1,5 +1,4 @@
 import generateApiKey from "../../shared/utils/apikey.util.js";
-import User from "../../shared/models/user.model.js";
 
 const getApiKeyController = async (req, res) => {
   try {

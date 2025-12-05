@@ -7,7 +7,7 @@ import {
   getMeController,
 } from "../controllers/auth.controller.js";
 import { googleAuthController } from "../controllers/googleAuth.controller.js";
-import { withAuth, withOptionalAuth } from "../middilewares/auth.middleware.js";
+import { withOptionalAuth } from "../middilewares/auth.middleware.js";
 
 const authRoute = express.Router();
 

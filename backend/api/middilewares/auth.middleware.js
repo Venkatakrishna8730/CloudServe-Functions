@@ -33,7 +33,6 @@ export const withOptionalAuth = (controller) => {
       const token = req.cookies.token;
 
       if (!token) {
-        // No token, proceed without user
         return controller(req, res, next);
       }
 
@@ -46,7 +45,6 @@ export const withOptionalAuth = (controller) => {
 
       return controller(req, res, next);
     } catch (error) {
-      // If token is invalid, just proceed without user (treat as guest)
       return controller(req, res, next);
     }
   };

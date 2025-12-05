@@ -1,10 +1,7 @@
-import { OAuth2Client } from "google-auth-library";
 import User from "../../shared/models/user.model.js";
 import generateToken from "../../shared/utils/token.util.js";
 import { setCookie } from "../../shared/utils/cookie.util.js";
 import generateApiKey from "../../shared/utils/apikey.util.js";
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleAuthController = async (req, res) => {
   try {
@@ -14,7 +11,6 @@ export const googleAuthController = async (req, res) => {
       return res.status(400).json({ message: "No credential provided" });
     }
 
-    // Frontend sends access_token as 'credential'
     const response = await fetch(
       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${credential}`
     );
@@ -30,11 +26,8 @@ export const googleAuthController = async (req, res) => {
 
     if (user) {
       if (user.authType !== "google") {
-        // Allow login but maybe update authType or just proceed
-        // For now, we just proceed.
       }
     } else {
-      // Create new user
       const apiKey = generateApiKey();
       let userName = email.split("@")[0];
       let existingUser = await User.findOne({ userName });

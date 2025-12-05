@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createFunction } from "../store/slices/functionsSlice";
-import { AlertCircle, ArrowLeft, Save } from "lucide-react";
+import { AlertCircle, ArrowLeft, Save, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 
@@ -44,6 +44,23 @@ const CreateFunctionPage = () => {
     }
   };
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith(".js")) {
+      setError("Please upload a JavaScript (.js) file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setCode(event.target.result);
+      setError("");
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="h-[calc(100vh-100px)] flex flex-col">
       <Link
@@ -57,14 +74,26 @@ const CreateFunctionPage = () => {
       <div className="flex-1 bg-card rounded-2xl border border-border-light shadow-lg overflow-hidden flex flex-col">
         <div className="p-6 border-b border-border-light flex items-center justify-between bg-background">
           <h1 className="text-xl font-bold">Create New Function</h1>
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-background font-bold rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Save size={18} />
-            {loading ? "Deploying..." : "Deploy Function"}
-          </button>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 px-4 py-2 bg-card border border-border-light text-text-primary font-medium rounded-lg hover:bg-background-hover hover:border-text-secondary transition-colors cursor-pointer">
+              <Upload size={18} />
+              Upload Code
+              <input
+                type="file"
+                accept=".js"
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+            </label>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-background font-bold rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Save size={18} />
+              {loading ? "Deploying..." : "Deploy Function"}
+            </button>
+          </div>
         </div>
 
         {error && (
