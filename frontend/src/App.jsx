@@ -13,6 +13,7 @@ import { checkAuth } from "./store/slices/authSlice";
 import PublicLayout from "./layouts/PublicLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import { ToastProvider } from "./context/ToastContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 // Pages
 import LandingPage from "./pages/LandingPage";
@@ -99,9 +100,11 @@ const App = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <Provider store={store}>
-        <ToastProvider>
-          <AppContent />
-        </ToastProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </ThemeProvider>
       </Provider>
     </GoogleOAuthProvider>
   );

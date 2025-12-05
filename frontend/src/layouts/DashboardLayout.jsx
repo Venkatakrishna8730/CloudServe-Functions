@@ -14,6 +14,14 @@ const DashboardLayout = () => {
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />
 
+      {/* Mobile Sidebar Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[9998] md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
       <div className="flex flex-col min-h-dvh md:h-dvh md:pl-16 relative z-0">
         {/* Mobile Header */}

@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Zap, Shield, Activity } from "lucide-react";
+import { ArrowRight, Zap, Shield, Activity, Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 
 const LandingPage = () => {
+  const { theme, toggleTheme } = useTheme();
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 md:px-6 h-16 md:h-20 flex items-center justify-between border-b border-border-light bg-background/80 backdrop-blur-md sticky top-0 z-50">
@@ -15,6 +17,13 @@ const LandingPage = () => {
           CloudServe Functions
         </div>
         <div className="flex items-center gap-3 md:gap-4">
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-text-secondary hover:text-primary transition-colors"
+            title={theme === "dark" ? "Light Mode" : "Dark Mode"}
+          >
+            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
           <Link
             to="/login"
             className="text-sm md:text-base text-text-secondary hover:text-primary transition-colors font-medium"

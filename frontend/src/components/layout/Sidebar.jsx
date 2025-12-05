@@ -12,6 +12,8 @@ import {
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useTheme } from "../../context/ThemeContext";
+import { Sun, Moon } from "lucide-react";
 
 const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const { user } = useSelector((state) => state.auth);
@@ -19,10 +21,15 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/login");
+  };
+
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false);
   };
 
   const navItems = [
@@ -41,12 +48,12 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
       initial="collapsed"
       animate={isHovered || isMobileMenuOpen ? "expanded" : "collapsed"}
       variants={sidebarVariants}
-      transition={{ type: "tween", ease: "linear", duration: 0.3 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
       style={{ zIndex: 9999 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={clsx(
-        "fixed inset-y-0 left-0 z-[9999] bg-card border-r border-border-light flex flex-col",
+        "fixed inset-y-0 left-0 z-[9999] bg-card border-r border-border-light flex flex-col transition-transform duration-300 ease-in-out md:transition-none",
         isMobileMenuOpen
           ? "translate-x-0 !w-72"
           : "-translate-x-full md:translate-x-0"
@@ -104,7 +111,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                   ? "bg-primary/10 text-primary"
                   : "text-text-secondary hover:bg-background-hover hover:text-text-primary"
               )}
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={handleNavClick}
               title={!isHovered ? item.label : ""}
             >
               <Icon size={20} className="shrink-0" />
@@ -122,8 +129,28 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
         })}
       </nav>
 
-      {/* Logout Button */}
-      <div className="p-4 border-t border-border-light overflow-hidden whitespace-nowrap">
+      {/* Theme Toggle & Logout */}
+      <div className="p-4 border-t border-border-light overflow-hidden whitespace-nowrap space-y-2">
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center gap-3 px-3 py-2 text-text-secondary hover:bg-background-hover hover:text-text-primary rounded-lg transition-colors min-w-max"
+          title={
+            !isHovered ? (theme === "dark" ? "Light Mode" : "Dark Mode") : ""
+          }
+        >
+          {theme === "dark" ? (
+            <Sun size={20} className="shrink-0" />
+          ) : (
+            <Moon size={20} className="shrink-0" />
+          )}
+          <motion.span
+            animate={{ opacity: isHovered || isMobileMenuOpen ? 1 : 0 }}
+            className="font-medium"
+          >
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </motion.span>
+        </button>
+
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2 text-error hover:bg-error/10 rounded-lg transition-colors min-w-max"

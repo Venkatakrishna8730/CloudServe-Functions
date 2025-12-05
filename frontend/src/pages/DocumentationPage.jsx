@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
-import { Code, Server, Play, Activity, ArrowRight } from "lucide-react";
+import { Code, Server, Play, Activity, ArrowRight, Globe } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
 
 const DocumentationPage = () => {
@@ -13,7 +13,7 @@ const DocumentationPage = () => {
         "Start by writing your serverless function in Node.js. Our platform supports standard Node.js modules. You can use the built-in editor or deploy from your local machine.",
       icon: Code,
       color: "bg-blue-500",
-      imagePlaceholder: "Code Editor Screenshot",
+      image: "/image1.png",
     },
     {
       id: 2,
@@ -22,16 +22,16 @@ const DocumentationPage = () => {
         "Once your code is ready, hit the deploy button. We handle the bundling, encryption, and distribution of your function to our edge network instantly.",
       icon: Server,
       color: "bg-purple-500",
-      imagePlaceholder: "Deployment Success Screen",
+      image: "/image2.png",
     },
     {
       id: 3,
-      title: "Test in Sandbox",
+      title: "Invoke via API",
       description:
-        "Verify your function's behavior in our isolated sandbox environment. Send test events and inspect the output before going live.",
-      icon: Play,
+        "Access your function instantly via a secure HTTP endpoint. Integrate seamlessly with your frontend, mobile apps, or webhooks.",
+      icon: Globe,
       color: "bg-green-500",
-      imagePlaceholder: "Sandbox Testing UI",
+      image: "/image4.png",
     },
     {
       id: 4,
@@ -40,7 +40,7 @@ const DocumentationPage = () => {
         "Track execution logs, latency, and error rates in real-time. Your function automatically scales to handle incoming traffic without any configuration.",
       icon: Activity,
       color: "bg-orange-500",
-      imagePlaceholder: "Analytics Dashboard",
+      image: "/image4.png",
     },
   ];
 
@@ -134,13 +134,22 @@ const DocumentationPage = () => {
                   } w-full`}
                 >
                   <div className="aspect-video rounded-xl overflow-hidden bg-card border border-border-light shadow-2xl group hover:border-primary/50 transition-colors relative">
-                    {/* Placeholder for actual image */}
-                    <div
-                      className={`absolute inset-0 ${step.color} opacity-5 group-hover:opacity-10 transition-opacity`}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center text-text-muted font-mono text-sm">
-                      {step.imagePlaceholder}
-                    </div>
+                    {step.image ? (
+                      <img
+                        src={step.image}
+                        alt={step.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <>
+                        <div
+                          className={`absolute inset-0 ${step.color} opacity-5 group-hover:opacity-10 transition-opacity`}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center text-text-muted font-mono text-sm">
+                          {step.imagePlaceholder}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </motion.div>

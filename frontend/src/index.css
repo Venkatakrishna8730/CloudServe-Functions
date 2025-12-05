@@ -1,39 +1,80 @@
 @import "tailwindcss";
 
+:root {
+  /* Light Mode Defaults */
+  --primary: #ffb400;
+  --primary-hover: #e6a200;
+  --primary-press: #cc9000;
+
+  --background: #ffffff;
+  --card: #f9fafb; /* Gray 50 */
+  --background-hover: #f3f4f6; /* Gray 100 */
+
+  --text-primary: #111827; /* Gray 900 */
+  --text-secondary: #4b5563; /* Gray 600 */
+  --text-muted: #9ca3af; /* Gray 400 */
+
+  --border-light: #e5e7eb; /* Gray 200 */
+  --border-heavy: #d1d5db; /* Gray 300 */
+
+  --success: #16a34a; /* Green 600 */
+  --error: #dc2626; /* Red 600 */
+  --warning: #d97706; /* Amber 600 */
+}
+
+.dark {
+  /* Dark Mode Overrides */
+  --primary: #ffb400;
+  --primary-hover: #ffa000;
+  --primary-press: #ff8f00;
+
+  --background: #0d0d0d;
+  --card: #1a1a1a;
+  --background-hover: #222222;
+
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  --border-light: #2a2a2a;
+  --border-heavy: #3a3a3a;
+
+  --success: #1db954;
+  --error: #f87171;
+  --warning: #fbbf24;
+}
+
 @theme {
-  --color-primary: #ffb400;
-  --color-primary-hover: #ffa000;
-  --color-primary-press: #ff8f00;
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-press: var(--primary-press);
 
-  --color-background: #0d0d0d;
-  --color-card: #1a1a1a;
-  --color-background-hover: #222222;
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-background-hover: var(--background-hover);
 
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #d1d5db;
-  --color-text-muted: #9ca3af;
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
 
-  --color-border-light: #2a2a2a;
-  --color-border-heavy: #3a3a3a;
+  --color-border-light: var(--border-light);
+  --color-border-heavy: var(--border-heavy);
 
-  --color-success: #1db954;
-  --color-error: #f87171;
-  --color-warning: #fbbf24;
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
 
   --font-sans: "Inter", "Roboto", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-}
-
-:root {
-  color-scheme: dark;
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
 }
 
 body {
   font-family: var(--font-sans);
   margin: 0;
   min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 button {
