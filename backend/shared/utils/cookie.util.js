@@ -1,0 +1,17 @@
+import "./env.js";
+const isProduction = process.env.NODE_ENV === "production";
+
+const setCookie = (res, token) => {
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "strict" : "lax",
+    maxAge: 5 * 24 * 60 * 60 * 1000,
+  });
+};
+
+const clearCookie = (res) => {
+  res.clearCookie("token");
+};
+
+export { setCookie, clearCookie };
