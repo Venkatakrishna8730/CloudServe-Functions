@@ -63,7 +63,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
             animate={{ opacity: isHovered || isMobileMenuOpen ? 1 : 0 }}
             className="text-xl font-bold text-primary"
           >
-            FaaS Platform
+            CloudServe Functions
           </motion.span>
         </div>
         <button

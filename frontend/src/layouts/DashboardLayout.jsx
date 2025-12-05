@@ -25,7 +25,7 @@ const DashboardLayout = () => {
             <Menu size={24} />
           </button>
           <span className="ml-4 text-lg font-bold text-primary">
-            FaaS Platform
+            CloudServe Functions
           </span>
         </header>
 

@@ -71,7 +71,7 @@ const FunctionOverview = () => {
   ];
 
   return (
-    <div className="h-full w-full flex flex-col space-y-8">
+    <div className="w-full flex flex-col space-y-8">
       {/* Stats Grid */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">

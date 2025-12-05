@@ -5,21 +5,21 @@ import { motion } from "framer-motion";
 const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="px-6 h-20 flex items-center justify-between border-b border-border-light bg-background/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="text-2xl font-bold text-primary flex items-center gap-2">
-          <Zap className="fill-current" />
-          FaaS Platform
+      <header className="px-4 md:px-6 h-16 md:h-20 flex items-center justify-between border-b border-border-light bg-background/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="text-xl md:text-2xl font-bold text-primary flex items-center gap-2">
+          <Zap className="fill-current w-5 h-5 md:w-6 md:h-6" />
+          CloudServe Functions
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
           <Link
             to="/login"
-            className="text-text-secondary hover:text-primary transition-colors font-medium"
+            className="text-sm md:text-base text-text-secondary hover:text-primary transition-colors font-medium"
           >
             Sign In
           </Link>
           <Link
             to="/signup"
-            className="bg-primary text-background px-5 py-2 rounded-full font-bold hover:bg-primary-hover transition-colors"
+            className="bg-primary text-background px-4 py-2 md:px-5 md:py-2 text-sm md:text-base rounded-full font-bold hover:bg-primary-hover transition-colors"
           >
             Get Started
           </Link>
@@ -28,11 +28,11 @@ const LandingPage = () => {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-20 px-6 text-center max-w-5xl mx-auto">
+        <section className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex flex-col justify-center py-12 md:py-20 px-4 md:px-6 text-center max-w-5xl mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-bold mb-6 tracking-tight"
+            className="text-4xl md:text-7xl font-bold mb-6 tracking-tight"
           >
             Deploy Serverless Functions <br />
             <span className="text-primary">in Seconds</span>
@@ -41,7 +41,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-text-secondary mb-10 max-w-2xl mx-auto"
+            className="text-lg md:text-xl text-text-secondary mb-8 md:mb-10 max-w-2xl mx-auto"
           >
             Focus on your code. We handle the infrastructure, scaling, and
             execution. The developer-first FaaS platform you've been waiting
@@ -69,7 +69,7 @@ const LandingPage = () => {
         </section>
 
         {/* Features Grid */}
-        <section className="py-20 px-6 bg-card/50">
+        <section className="py-12 md:py-20 px-4 md:px-6 bg-card/50">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard
               icon={<Zap size={32} />}
@@ -91,14 +91,14 @@ const LandingPage = () => {
       </main>
 
       <footer className="py-8 px-6 border-t border-border-light text-center text-text-muted">
-        <p>&copy; 2024 FaaS Platform. All rights reserved.</p>
+        <p>&copy; 2025 CloudServe Functions. All rights reserved.</p>
       </footer>
     </div>
   );
 };
 
 const FeatureCard = ({ icon, title, description }) => (
-  <div className="p-8 rounded-2xl bg-card border border-border-light hover:border-primary transition-colors group">
+  <div className="p-6 md:p-8 rounded-2xl bg-card border border-border-light hover:border-primary transition-colors group">
     <div className="mb-4 text-primary group-hover:scale-110 transition-transform duration-300">
       {icon}
     </div>

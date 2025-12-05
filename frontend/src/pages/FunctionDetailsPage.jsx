@@ -54,8 +54,14 @@ const FunctionDetailsPage = () => {
     { name: "Settings", path: "settings", icon: Settings },
   ];
 
+  const isFixedLayout =
+    location.pathname.includes("/editor") ||
+    location.pathname.includes("/logs");
+
   return (
-    <div className="flex flex-col min-h-full">
+    <div
+      className={`flex flex-col min-h-full ${isFixedLayout ? "md:h-full" : ""}`}
+    >
       {/* Header */}
       <header className="mb-6 shrink-0">
         <Link
@@ -108,7 +114,11 @@ const FunctionDetailsPage = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-h-0 flex flex-col">
+      <div
+        className={`flex-1 min-h-0 flex flex-col ${
+          isFixedLayout ? "md:h-full" : ""
+        }`}
+      >
         <Outlet context={{ func }} />
       </div>
     </div>

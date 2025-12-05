@@ -1,6 +1,6 @@
 import User from "../../shared/models/user.model.js";
 import generateToken from "../../shared/utils/token.util.js";
-import { setCookie } from "../../shared/utils/cookie.util.js";
+import { clearCookie, setCookie } from "../../shared/utils/cookie.util.js";
 import generateApiKey from "../../shared/utils/apikey.util.js";
 import sendVerificationEmail from "../services/email.service.js";
 import crypto from "crypto";
@@ -121,9 +121,12 @@ const logoutController = async (req, res) => {
 
 const getMeController = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(200).json(null);
+    }
     const user = await User.findById(req.user._id).select("-password");
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(200).json(null);
     }
     res.json(user);
   } catch (error) {

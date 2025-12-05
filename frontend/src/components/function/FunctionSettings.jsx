@@ -32,7 +32,7 @@ const FunctionSettings = () => {
   if (!func) return null;
 
   return (
-    <div className="h-full w-full space-y-8 relative">
+    <div className="w-full space-y-8 relative">
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">

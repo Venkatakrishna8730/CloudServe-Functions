@@ -8,7 +8,7 @@
     "start:api": "nodemon api/server.js",
     "start:gateway": "nodemon gateway/server.js",
     "start:sandbox": "nodemon sandbox/server.js",
-    "start": "echo 'Please run start:api, start:gateway, and start:sandbox in separate terminals'"
+    "start": "docker start minio-server & npm run start:api & npm run start:gateway & npm run start:sandbox"
   },
   "author": "",
   "license": "ISC",

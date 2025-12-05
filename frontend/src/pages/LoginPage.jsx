@@ -70,7 +70,7 @@ const LoginPage = () => {
             className="inline-flex items-center gap-2 text-2xl font-bold text-primary mb-2"
           >
             <Zap className="fill-current" />
-            FaaS Platform
+            CloudServe Functions
           </Link>
           <h2 className="text-xl text-text-primary font-semibold">
             Welcome back
