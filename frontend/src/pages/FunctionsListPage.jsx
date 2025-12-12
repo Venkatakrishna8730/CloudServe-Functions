@@ -72,13 +72,13 @@ const FunctionsListPage = () => {
           {filteredList.map((func) => (
             <div
               key={func._id}
-              className="bg-card p-6 rounded-xl border border-border-light hover:border-primary/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+              className="bg-card p-6 rounded-xl border border-border-light hover:border-primary/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 group relative"
             >
               <Link
                 to={`/functions/${func.name}/overview`}
                 className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4"
               >
-                <div className="flex-1">
+                <div className="flex-1 pr-8 md:pr-0">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-xl font-bold group-hover:text-primary transition-colors">
                       {func.name}
@@ -104,7 +104,7 @@ const FunctionsListPage = () => {
                 </div>
               </Link>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 absolute top-6 right-6 md:static">
                 <Link
                   to={`/functions/${func.name}/overview`}
                   className="p-2 text-text-secondary hover:text-primary hover:bg-background rounded-lg transition-colors group-hover:translate-x-1 duration-300"

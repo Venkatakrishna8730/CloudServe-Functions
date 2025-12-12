@@ -88,7 +88,10 @@ const gatewayService = async (username, functionName, requestContext) => {
     const startTime = new Date();
 
     // Call Sandbox Service via Client Wrapper
-    const executionResult = await executeFunction(code, requestContext);
+    const executionResult = await executeFunction(
+      func._id.toString(),
+      requestContext
+    );
 
     const endTime = new Date();
     const duration = endTime - startTime;

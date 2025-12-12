@@ -87,14 +87,16 @@ const DashboardPage = () => {
       </header>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <motion.div
               variants={item}
               key={index}
-              className="bg-card p-6 rounded-xl border border-border-light hover:border-border-heavy transition-colors"
+              className={`bg-card p-6 rounded-xl border border-border-light hover:border-border-heavy transition-colors ${
+                index === 2 ? "col-span-2 md:col-span-1" : ""
+              }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 rounded-lg bg-background ${stat.color}`}>

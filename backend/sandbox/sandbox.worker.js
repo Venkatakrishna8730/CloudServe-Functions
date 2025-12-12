@@ -1,103 +1,70 @@
 import { NodeVM } from "vm2";
+import path from "path";
+import fs from "fs";
 
 process.on("message", async (message) => {
   if (message.type === "execute") {
-    const { code, context } = message;
+    const { context, root } = message;
     const logs = [];
 
     const vm = new NodeVM({
       console: "redirect",
       sandbox: {},
-      timeout: 5000, // 5 seconds timeout inside VM
+      timeout: 5000,
       require: {
         external: true,
         builtin: ["*"],
-        root: "./",
+        root,
       },
       wrapper: "commonjs",
     });
 
-    const formatLog = (args) => {
-      return args
-        .map((arg) => {
-          if (typeof arg === "object" && arg !== null) {
-            try {
-              return JSON.stringify(arg, null, 2);
-            } catch (e) {
-              return String(arg);
-            }
-          }
-          return String(arg);
-        })
+    // Log capture
+    const formatLog = (args) =>
+      args
+        .map((arg) =>
+          typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)
+        )
         .join(" ");
-    };
 
-    vm.on("console.log", (...args) => {
-      logs.push({
-        level: "log",
-        message: formatLog(args),
-      });
-    });
+    vm.on("console.log", (...args) =>
+      logs.push({ level: "log", message: formatLog(args) })
+    );
 
-    vm.on("console.error", (...args) => {
-      logs.push({
-        level: "error",
-        message: formatLog(args),
-      });
-    });
+    vm.on("console.error", (...args) =>
+      logs.push({ level: "error", message: formatLog(args) })
+    );
 
     try {
-      const userModule = vm.run(code, "userFunc.js");
+      const filePath = path.join(root, "index.js");
 
-      let result;
+      // Load bundled file through runFile() → THIS ENABLES require("axios")
+      const userModule = vm.runFile(filePath);
+
       let userFunc;
 
-      // Check if the user exported a function
-      if (typeof userModule === "function") {
-        userFunc = userModule;
-      } else if (
-        typeof userModule === "object" &&
-        typeof userModule.default === "function"
-      ) {
-        userFunc = userModule.default;
-      } else if (
-        typeof userModule === "object" &&
-        typeof userModule.handler === "function"
-      ) {
-        userFunc = userModule.handler;
-      }
+      if (typeof userModule === "function") userFunc = userModule;
+      else if (userModule?.default) userFunc = userModule.default;
+      else if (userModule?.handler) userFunc = userModule.handler;
 
-      if (userFunc) {
-        // Execute the exported function with context
-        result = await userFunc(context);
-      } else {
-        // Treat as a script execution
-        // userModule contains the exports. If it's empty, maybe the script just ran.
-        // We can return userModule as the result, or null if it's just {}
-        if (Object.keys(userModule).length === 0) {
-          result = null;
-        } else {
-          result = userModule;
-        }
-      }
+      let result;
+      if (userFunc) result = await userFunc(context);
+      else result = userModule;
 
-      const memoryUsage = process.memoryUsage();
+      // Serialize result safely
+      const safe = (x) => JSON.parse(JSON.stringify(x));
+
       process.send({
         success: true,
-        result: result,
-        logs: logs,
-        memoryUsage: {
-          heapUsed: memoryUsage.heapUsed,
-          heapTotal: memoryUsage.heapTotal,
-          external: memoryUsage.external,
-          rss: memoryUsage.rss,
-        },
+        result: safe(result),
+        logs,
+        memoryUsage: safe(process.memoryUsage()),
       });
-    } catch (error) {
+    } catch (err) {
       process.send({
         success: false,
-        error: error.message,
-        logs: logs,
+        error: err.message,
+        logs,
       });
     } finally {
       process.exit();

@@ -15,16 +15,11 @@ const FunctionEditor = () => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    if (func?.code) {
-      setCode(func.code);
-    } else if (func?._id) {
-      // Fetch code if not present in func object (though our controller returns it now)
-      // For now, assume it's there or we might need to fetch it separately if the list doesn't include full code
-      // The list endpoint usually doesn't return full code for performance.
-      // We might need to fetch the single function details to get the code.
+    if (func?._id) {
+      // Always fetch to ensure we get the latest code and filename
       fetchFunctionCode(func._id);
     }
-  }, [func]);
+  }, [func?._id]);
 
   const fetchFunctionCode = async (id) => {
     try {
@@ -32,10 +27,21 @@ const FunctionEditor = () => {
       if (data.code) {
         setCode(data.code);
       }
+      if (data.filename) {
+        setLanguage(
+          data.filename.endsWith(".ts") ? "typescript" : "javascript"
+        );
+      }
     } catch (error) {
       console.error("Failed to fetch function code", error);
     }
   };
+
+  const [language, setLanguage] = useState("javascript");
+
+  // Language is manually selected or set by fetchFunctionCode
+
+  // Language is manually selected
 
   const handleEditorChange = (value) => {
     setCode(value);
@@ -46,7 +52,10 @@ const FunctionEditor = () => {
     setSaving(true);
     setMessage(null);
     try {
-      await dispatch(updateFunction({ id: func._id, data: { code } })).unwrap();
+      const filename = language === "typescript" ? "index.ts" : "index.js";
+      await dispatch(
+        updateFunction({ id: func._id, data: { code, filename } })
+      ).unwrap();
       setIsDirty(false);
       setMessage({
         type: "success",
@@ -71,8 +80,16 @@ const FunctionEditor = () => {
       <div className="flex items-center justify-between px-4 py-2 border-b border-border-light bg-background gap-2">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-text-secondary">
-            index.js
+            {language === "typescript" ? "index.ts" : "index.js"}
           </span>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="bg-card border border-border-light rounded px-2 py-1 text-xs focus:outline-none focus:border-primary"
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+          </select>
           {isDirty && (
             <span
               className="w-2 h-2 rounded-full bg-warning"
@@ -112,7 +129,7 @@ const FunctionEditor = () => {
       <div className="flex-1 min-h-0">
         <Editor
           height="100%"
-          defaultLanguage="javascript"
+          language={language}
           theme="vs-dark"
           value={code}
           onChange={handleEditorChange}

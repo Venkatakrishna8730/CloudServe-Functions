@@ -14,20 +14,15 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: ghcr.io/your_username/cloudserve-gateway:latest
+          image: cloudserve-gateway
           imagePullPolicy: Never
           ports:
             - containerPort: 5001
           envFrom:
             - configMapRef:
-                name: backend-config
+                name: config
             - secretRef:
-                name: backend-secrets
-          env:
-            - name: MONGO_URI
-              value: "mongodb://mongo:27017/serverless"
-            - name: SANDBOX_URL
-              value: "http://sandbox-service:5002"
+                name: secrets
 ---
 apiVersion: v1
 kind: Service

@@ -14,6 +14,7 @@ export const ROUTES = {
     ME: "/auth/me",
     REGENERATE_API_KEY: "/apikey/regenerate",
     GOOGLE_LOGIN: "/auth/google",
+    RESEND_VERIFICATION: "/auth/resend-verification",
   },
   FUNCTIONS: {
     LIST: "/functions",

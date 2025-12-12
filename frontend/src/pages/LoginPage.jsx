@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, googleLogin, clearError } from "../store/slices/authSlice";
+import {
+  login,
+  googleLogin,
+  clearError,
+  resendVerification,
+} from "../store/slices/authSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import { Zap, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useToast } from "../context/ToastContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -35,6 +41,25 @@ const LoginPage = () => {
       console.error("Google Login Failed");
     },
   });
+
+  const { toast } = useToast();
+
+  const handleResendVerification = () => {
+    if (email) {
+      // Optimistic navigation
+      navigate("/signup", { state: { email, verify: true } });
+      toast.info("Sending verification email...", 2000);
+
+      dispatch(resendVerification(email))
+        .unwrap()
+        .then(() => {
+          toast.success("Verification email sent successfully!");
+        })
+        .catch((err) => {
+          toast.error(err.message || "Failed to send verification email");
+        });
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -82,9 +107,19 @@ const LoginPage = () => {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-lg flex items-center gap-3 text-error">
-            <AlertCircle size={20} />
-            <span className="text-sm">{error}</span>
+          <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-lg flex flex-col gap-2 text-error">
+            <div className="flex items-center gap-3">
+              <AlertCircle size={20} />
+              <span className="text-sm">{error}</span>
+            </div>
+            {error.includes("not verified") && (
+              <button
+                onClick={handleResendVerification}
+                className="text-xs font-bold underline hover:text-error-hover self-start ml-8"
+              >
+                Resend Verification Email
+              </button>
+            )}
           </div>
         )}
 

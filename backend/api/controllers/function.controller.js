@@ -6,8 +6,10 @@ import { generateHash } from "../../shared/utils/crypto.utils.js";
 import {
   uploadOriginalCode,
   uploadBundle,
+  uploadPackageJson,
   readOriginalFiles,
   deleteFunctionFolder,
+  deleteDependencyCache,
 } from "../../shared/services/storage.service.js";
 import mongoose from "mongoose";
 
@@ -24,14 +26,43 @@ const functionDeploy = async (req, res) => {
     const functionId = new mongoose.Types.ObjectId();
     const sourceHash = generateHash(code);
 
+    let filename = req.body.filename;
+    if (!filename) {
+      const isTS = /:\s*\w+|interface\s+\w+|type\s+\w+/.test(code);
+      filename = isTS ? "index.ts" : "index.js";
+    }
+
     const sourcePath = await uploadOriginalCode(functionId.toString(), [
-      { name: "index.js", content: code },
+      { name: filename, content: code },
     ]);
 
-    const bundledCode = await bundleCode(code);
+    const { code: bundledCode, dependencies } = await bundleCode(code);
     const bundleHash = generateHash(bundledCode);
 
     const bundlePath = await uploadBundle(functionId.toString(), bundledCode);
+
+    // Create and upload package.json if there are dependencies
+    if (dependencies && dependencies.length > 0) {
+      const packageJson = {
+        name: `func-${name}`,
+        version: "1.0.0",
+        dependencies: {},
+      };
+      dependencies.forEach((dep) => {
+        packageJson.dependencies[dep] = "latest";
+      });
+      await uploadPackageJson(
+        functionId.toString(),
+        JSON.stringify(packageJson, null, 2)
+      );
+    } else {
+      // Upload empty package.json or handle absence?
+      // Better to upload an empty one to avoid 404s in runner
+      await uploadPackageJson(
+        functionId.toString(),
+        JSON.stringify({ dependencies: {} })
+      );
+    }
 
     const endpoint = `${process.env.FAAS_URL}/run/${user.userName}/${name}`;
 
@@ -83,11 +114,21 @@ const getFunctionWithId = async (req, res) => {
     }
 
     let code = "";
+    let mainFile;
     try {
       const files = await readOriginalFiles(functionWithId._id.toString());
-      const mainFile = files.find((f) => f.name === "index.js") || files[0];
+      console.log(
+        `Files found for ${functionWithId._id}:`,
+        files.map((f) => f.name)
+      );
+      mainFile =
+        files.find((f) => f.name === "index.ts") ||
+        files.find((f) => f.name === "index.js") ||
+        files[0];
       if (mainFile) {
         code = mainFile.content;
+      } else {
+        console.warn(`No main file found for ${functionWithId._id}`);
       }
     } catch (err) {
       console.error("Error reading source:", err);
@@ -95,6 +136,7 @@ const getFunctionWithId = async (req, res) => {
 
     const result = functionWithId.toObject();
     result.code = code;
+    result.filename = mainFile ? mainFile.name : "index.js";
 
     res.json(result);
   } catch (error) {
@@ -128,14 +170,36 @@ const updateFunction = async (req, res) => {
 
       updateData.sourceHash = generateHash(code);
 
-      await uploadOriginalCode(functionId, [
-        { name: "index.js", content: code },
-      ]);
+      let filename = req.body.filename;
+      if (!filename) {
+        const isTS = /:\s*\w+|interface\s+\w+|type\s+\w+/.test(code);
+        filename = isTS ? "index.ts" : "index.js";
+      }
 
-      const bundledCode = await bundleCode(code);
+      await uploadOriginalCode(functionId, [{ name: filename, content: code }]);
+      const { code: bundledCode, dependencies } = await bundleCode(code);
       updateData.bundleHash = generateHash(bundledCode);
 
       await uploadBundle(functionId, bundledCode);
+
+      // Update package.json
+      if (dependencies) {
+        const packageJson = {
+          name: `func-${functionId}`,
+          version: "1.0.0",
+          dependencies: {},
+        };
+        dependencies.forEach((dep) => {
+          packageJson.dependencies[dep] = "latest";
+        });
+        await uploadPackageJson(
+          functionId,
+          JSON.stringify(packageJson, null, 2)
+        );
+      }
+
+      // Invalidate dependency cache to ensure fresh install
+      await deleteDependencyCache(functionId);
 
       updateData.version = (await Function.findById(functionId)).version + 1;
     }

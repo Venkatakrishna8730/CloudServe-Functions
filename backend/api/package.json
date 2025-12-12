@@ -7,6 +7,7 @@
     "start": "node api/server.js"
   },
   "dependencies": {
+    "acorn": "^8.15.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

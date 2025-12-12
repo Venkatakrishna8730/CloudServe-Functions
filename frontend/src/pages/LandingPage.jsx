@@ -16,7 +16,7 @@ const LandingPage = () => {
           />
           CloudServe Functions
         </div>
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <button
             onClick={toggleTheme}
             className="p-2 text-text-secondary hover:text-primary transition-colors"
@@ -26,13 +26,13 @@ const LandingPage = () => {
           </button>
           <Link
             to="/login"
-            className="text-sm md:text-base text-text-secondary hover:text-primary transition-colors font-medium"
+            className="text-xs md:text-base text-text-secondary hover:text-primary transition-colors font-medium px-2 py-1"
           >
             Sign In
           </Link>
           <Link
             to="/signup"
-            className="bg-primary text-background px-4 py-2 md:px-5 md:py-2 text-sm md:text-base rounded-full font-bold hover:bg-primary-hover transition-colors"
+            className="bg-primary text-background px-3 py-1.5 md:px-5 md:py-2 text-xs md:text-base rounded-full font-bold hover:bg-primary-hover transition-colors whitespace-nowrap"
           >
             Get Started
           </Link>

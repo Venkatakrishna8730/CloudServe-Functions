@@ -1,13 +1,21 @@
 import "../utils/env.js";
 import * as Minio from "minio";
 
-const minioClient = new Minio.Client({
+const minioConfig = {
   endPoint: (process.env.MINIO_ENDPOINT || "localhost").trim(),
   port: parseInt((process.env.MINIO_PORT || "9000").toString().trim()),
   useSSL: (process.env.MINIO_USE_SSL || "false").trim() === "true",
   accessKey: (process.env.MINIO_ACCESS_KEY || "").trim(),
   secretKey: (process.env.MINIO_SECRET_KEY || "").trim(),
+};
+
+console.log("MinIO Configuration:", {
+  ...minioConfig,
+  accessKey: "***",
+  secretKey: "***",
 });
+
+const minioClient = new Minio.Client(minioConfig);
 
 const BUCKET_NAME = process.env.MINIO_BUCKET_NAME || "functions";
 
@@ -47,6 +55,12 @@ export const uploadBundle = async (functionId, bundleBuffer) => {
   return objectName;
 };
 
+export const uploadPackageJson = async (functionId, content) => {
+  const objectName = `${functionId}/package.json`;
+  await minioClient.putObject(BUCKET_NAME, objectName, content);
+  return objectName;
+};
+
 export const readOriginalFiles = async (functionId) => {
   const prefix = `${functionId}/src/`;
   const stream = minioClient.listObjects(BUCKET_NAME, prefix, true);
@@ -65,8 +79,22 @@ export const readOriginalFiles = async (functionId) => {
 
 export const readBundle = async (functionId) => {
   const objectName = `${functionId}/bundle/bundle.js`;
+  console.log("📦 Trying to read:", objectName);
   const stream = await minioClient.getObject(BUCKET_NAME, objectName);
   return streamToString(stream);
+};
+
+export const readPackageJson = async (functionId) => {
+  const objectName = `${functionId}/package.json`;
+  try {
+    const stream = await minioClient.getObject(BUCKET_NAME, objectName);
+    return await streamToString(stream);
+  } catch (error) {
+    if (error.code === "NoSuchKey") {
+      return null;
+    }
+    throw error;
+  }
 };
 
 // Helper to convert stream to string
@@ -93,11 +121,46 @@ export const deleteFunctionFolder = async (functionId) => {
   }
 };
 
+// Dependency Cache Methods
+export const uploadDependencyCache = async (functionId, cacheBuffer) => {
+  const objectName = `${functionId}/cache/node_modules.tar.gz`;
+  await minioClient.putObject(BUCKET_NAME, objectName, cacheBuffer);
+  return objectName;
+};
+
+export const readDependencyCache = async (functionId) => {
+  const objectName = `${functionId}/cache/node_modules.tar.gz`;
+  try {
+    const stream = await minioClient.getObject(BUCKET_NAME, objectName);
+    return stream; // Return stream for piping
+  } catch (error) {
+    if (error.code === "NoSuchKey") {
+      return null;
+    }
+    throw error;
+  }
+};
+
+export const deleteDependencyCache = async (functionId) => {
+  const objectName = `${functionId}/cache/node_modules.tar.gz`;
+  try {
+    await minioClient.removeObject(BUCKET_NAME, objectName);
+  } catch (error) {
+    // Ignore if not found
+    console.warn(`Failed to delete cache for ${functionId}:`, error.message);
+  }
+};
+
 export default {
   initMinio,
   uploadOriginalCode,
   uploadBundle,
+  uploadPackageJson,
   readOriginalFiles,
   readBundle,
+  readPackageJson,
   deleteFunctionFolder,
+  uploadDependencyCache,
+  readDependencyCache,
+  deleteDependencyCache,
 };

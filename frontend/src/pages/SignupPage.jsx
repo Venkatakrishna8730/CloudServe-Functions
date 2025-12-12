@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signup,
@@ -24,15 +24,23 @@ const SignupPage = () => {
   const dispatch = useDispatch();
   const { error, user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (user) {
       navigate("/dashboard");
     }
+
+    // Check for redirect from login page for verification
+    if (location.state?.verify && location.state?.email) {
+      setFormData((prev) => ({ ...prev, email: location.state.email }));
+      setStep("verify");
+    }
+
     return () => {
       dispatch(clearError());
     };
-  }, [user, navigate, dispatch]);
+  }, [user, navigate, dispatch, location.state]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

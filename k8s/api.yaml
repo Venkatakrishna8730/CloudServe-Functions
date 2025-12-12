@@ -14,18 +14,15 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/your_username/cloudserve-api:latest
+          image: cloudserve-api
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
           envFrom:
             - configMapRef:
-                name: backend-config
+                name: config
             - secretRef:
-                name: backend-secrets
-          env:
-            - name: MONGO_URI
-              value: "mongodb://mongo:27017/serverless"
+                name: secrets
 ---
 apiVersion: v1
 kind: Service

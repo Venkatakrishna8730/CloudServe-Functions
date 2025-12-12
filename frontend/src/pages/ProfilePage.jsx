@@ -3,6 +3,7 @@ import { User, Key, Copy, RefreshCw, Check, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { regenerateApiKey } from "../store/slices/authSlice";
 import { useToast } from "../context/ToastContext";
+import { copyText } from "../utils/clipboard.util";
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -12,30 +13,28 @@ const ProfilePage = () => {
   const [showKey, setShowKey] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
-  const handleCopyApiKey = () => {
+  const handleCopyApiKey = async () => {
     if (user?.apiKey) {
-      navigator.clipboard.writeText(user.apiKey);
-      setCopied(true);
-      toast.success("API Key copied to clipboard");
-      setTimeout(() => setCopied(false), 2000);
+      const success = await copyText(user.apiKey);
+      if (success) {
+        setCopied(true);
+        toast.success("API Key copied to clipboard");
+        setTimeout(() => setCopied(false), 2000);
+      } else {
+        toast.error("Failed to copy API Key");
+      }
     }
   };
 
   const handleRegenerateApiKey = async () => {
-    if (
-      window.confirm(
-        "Are you sure you want to regenerate your API Key? The old key will stop working immediately."
-      )
-    ) {
-      setRegenerating(true);
-      try {
-        await dispatch(regenerateApiKey()).unwrap();
-        toast.success("API Key regenerated successfully");
-      } catch (error) {
-        toast.error(error || "Failed to regenerate API Key");
-      } finally {
-        setRegenerating(false);
-      }
+    setRegenerating(true);
+    try {
+      await dispatch(regenerateApiKey()).unwrap();
+      toast.success("API Key regenerated successfully");
+    } catch (error) {
+      toast.error(error || "Failed to regenerate API Key");
+    } finally {
+      setRegenerating(false);
     }
   };
 

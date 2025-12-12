@@ -55,6 +55,22 @@ export const verifyEmail = createAsyncThunk(
   }
 );
 
+export const resendVerification = createAsyncThunk(
+  "auth/resendVerification",
+  async (email, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(ROUTES.AUTH.RESEND_VERIFICATION, {
+        email,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to resend verification"
+      );
+    }
+  }
+);
+
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {

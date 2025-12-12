@@ -42,6 +42,11 @@ const signupController = async (req, res) => {
       return res.status(409).json({ message: "User already exists" });
     }
 
+    const existingUserName = await User.findOne({ userName });
+    if (existingUserName) {
+      return res.status(409).json({ message: "Username already taken" });
+    }
+
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
@@ -133,10 +138,43 @@ const getMeController = async (req, res) => {
   }
 };
 
+const resendVerificationController = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: "User already verified" });
+    }
+
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+    user.verificationCode = verificationCode;
+    user.verificationCodeExpires = verificationCodeExpires;
+    await user.save();
+
+    await sendVerificationEmail(email, verificationCode);
+
+    return res.status(200).json({ message: "Verification code sent to email" });
+  } catch (error) {
+    console.error("Resend verification error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {
   loginController,
   signupController,
   verifyEmailController,
   logoutController,
   getMeController,
+  resendVerificationController,
 };

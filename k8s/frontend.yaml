@@ -14,18 +14,15 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/your_username/cloudserve-frontend:latest
+          image: cloudserve-frontend
           imagePullPolicy: Never
           ports:
             - containerPort: 80
-          env:
-            - name: VITE_GOOGLE_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: backend-secrets
-                  key: GOOGLE_CLIENT_ID
-            - name: VITE_API_URL
-              value: "/api"
+          envFrom:
+            - configMapRef:
+                name: config
+            - secretRef:
+                name: secrets
 ---
 apiVersion: v1
 kind: Service

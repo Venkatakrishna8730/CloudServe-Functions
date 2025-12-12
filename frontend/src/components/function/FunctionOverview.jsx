@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsages } from "../../store/slices/usageSlice";
+import { copyText } from "../../utils/clipboard.util";
 
 const FunctionOverview = () => {
   const { func } = useOutletContext();
@@ -28,11 +29,13 @@ const FunctionOverview = () => {
     }
   }, [dispatch, func?._id]);
 
-  const handleCopyEndpoint = () => {
+  const handleCopyEndpoint = async () => {
     if (func?.endpoint) {
-      navigator.clipboard.writeText(func.endpoint);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      const success = await copyText(func.endpoint);
+      if (success) {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
     }
   };
 
@@ -198,33 +201,36 @@ const FunctionOverview = () => {
                 </tr>
               </thead>
               <tbody>
-                {usages.slice(0, 10).map((usage) => (
-                  <tr
-                    key={usage._id}
-                    className="border-b border-border-light last:border-0 hover:bg-background/50 transition-colors"
-                  >
-                    <td className="p-4">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${
-                          usage.status === "success"
-                            ? "bg-success/20 text-success"
-                            : "bg-error/20 text-error"
-                        }`}
-                      >
-                        {usage.status.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="p-4 font-mono text-sm">
-                      {usage.duration}ms
-                    </td>
-                    <td className="p-4 font-mono text-sm">
-                      {usage.memoryUsed} MB
-                    </td>
-                    <td className="p-4 text-sm text-text-secondary">
-                      {new Date(usage.timestamp).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
+                {[...usages]
+                  .reverse()
+                  .slice(0, 10)
+                  .map((usage) => (
+                    <tr
+                      key={usage._id}
+                      className="border-b border-border-light last:border-0 hover:bg-background/50 transition-colors"
+                    >
+                      <td className="p-4">
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-bold ${
+                            usage.status === "success"
+                              ? "bg-success/20 text-success"
+                              : "bg-error/20 text-error"
+                          }`}
+                        >
+                          {usage.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-4 font-mono text-sm">
+                        {usage.duration}ms
+                      </td>
+                      <td className="p-4 font-mono text-sm">
+                        {usage.memoryUsed} MB
+                      </td>
+                      <td className="p-4 text-sm text-text-secondary">
+                        {new Date(usage.timestamp).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           )}
