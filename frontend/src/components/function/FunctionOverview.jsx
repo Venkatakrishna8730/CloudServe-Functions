@@ -75,19 +75,10 @@ const FunctionOverview = () => {
 
   return (
     <div className="w-full flex flex-col space-y-8">
-      {/* Stats Grid */}
+      {}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold">Overview</h2>
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-bold border ${
-              func.isActive
-                ? "bg-success/10 text-success border-success/20"
-                : "bg-text-muted/10 text-text-muted border-text-muted/20"
-            }`}
-          >
-            {func.isActive ? "ACTIVE" : "INACTIVE"}
-          </span>
         </div>
       </div>
 
@@ -111,7 +102,7 @@ const FunctionOverview = () => {
         })}
       </div>
 
-      {/* Details & Endpoint */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-card rounded-xl border border-border-light overflow-hidden">
           <div className="p-6 border-b border-border-light">
@@ -173,7 +164,7 @@ const FunctionOverview = () => {
         </div>
       </div>
 
-      {/* Recent Usage */}
+      {}
       <div className="bg-card rounded-xl border border-border-light overflow-hidden">
         <div className="p-6 border-b border-border-light">
           <h2 className="text-xl font-bold flex items-center gap-2">

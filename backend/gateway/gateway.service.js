@@ -49,7 +49,7 @@ const gatewayService = async (username, functionName, requestContext) => {
       });
 
       try {
-        // 1. Fetch original code
+        
         const files = await readOriginalFiles(func._id.toString());
         if (!files || files.length === 0) {
           throw new Error("Source files not found for re-bundling");
@@ -58,23 +58,23 @@ const gatewayService = async (username, functionName, requestContext) => {
         const mainFile = files.find((f) => f.name === "index.js") || files[0];
         const sourceCode = mainFile.content;
 
-        // 2. Bundle code
+        
         const bundledCode = await bundleCode(sourceCode);
 
-        // 3. Generate new hash
+        
         const newBundleHash = generateHash(bundledCode);
 
-        // 4. Upload new bundle
+        
         await uploadBundle(func._id.toString(), bundledCode);
 
-        // 5. Update DB
+        
         await Function.findByIdAndUpdate(func._id, {
           bundleHash: newBundleHash,
           $inc: { version: 1 },
         });
 
         console.log("Auto-rebundle successful. Proceeding with execution.");
-        code = bundledCode; // Use new code for execution
+        code = bundledCode; 
       } catch (rebundleError) {
         console.error("Auto-rebundle failed:", rebundleError);
         return {
@@ -87,18 +87,19 @@ const gatewayService = async (username, functionName, requestContext) => {
     const executionId = crypto.randomUUID();
     const startTime = new Date();
 
-    // Call Sandbox Service via Client Wrapper
+    
     const executionResult = await executeFunction(
       func._id.toString(),
-      requestContext
+      requestContext,
+      func.depHash
     );
 
     const endTime = new Date();
     const duration = endTime - startTime;
 
-    // Create Log entry
+    
     const memoryUsed = executionResult.memoryUsage
-      ? Math.round(executionResult.memoryUsage.heapUsed / 1024 / 1024) // Convert to MB
+      ? Math.round(executionResult.memoryUsage.heapUsed / 1024 / 1024) 
       : 0;
 
     await Log.create({
@@ -113,7 +114,7 @@ const gatewayService = async (username, functionName, requestContext) => {
       error: executionResult.error,
     });
 
-    // Create Usage entry
+    
     await Usage.create({
       functionId: func._id,
       userId: user._id,
@@ -125,7 +126,7 @@ const gatewayService = async (username, functionName, requestContext) => {
       error: executionResult.error,
     });
 
-    // Calculate new stats
+    
     const totalExecuted = (func.stats?.executed || 0) + 1;
     const oldAvgLatency = func.stats?.avgLatency || 0;
     const newAvgLatency = Math.round(

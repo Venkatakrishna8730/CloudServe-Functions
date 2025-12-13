@@ -45,7 +45,7 @@ const ProfilePage = () => {
       </header>
 
       <div className="space-y-6">
-        {/* User Details Card */}
+        {}
         <div className="bg-card rounded-xl border border-border-light overflow-hidden">
           <div className="p-6 border-b border-border-light">
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -81,7 +81,7 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* API Key Card */}
+        {}
         <div className="bg-card rounded-xl border border-border-light overflow-hidden">
           <div className="p-6 border-b border-border-light">
             <h2 className="text-xl font-bold flex items-center gap-2">

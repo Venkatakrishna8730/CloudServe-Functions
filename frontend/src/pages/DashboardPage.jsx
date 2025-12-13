@@ -21,7 +21,6 @@ const DashboardPage = () => {
     dispatch(fetchAllUsages());
   }, [dispatch]);
 
-  // Calculate stats
   const totalFunctions = list.length;
   const totalInvocations = list.reduce(
     (acc, func) => acc + (func.stats?.executed || 0),
@@ -86,7 +85,7 @@ const DashboardPage = () => {
         </p>
       </header>
 
-      {/* Stats Grid */}
+      {}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
@@ -110,9 +109,9 @@ const DashboardPage = () => {
         })}
       </div>
 
-      {/* Quick Actions & Recent Activity */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content Area */}
+        {}
         <motion.div variants={item} className="lg:col-span-2 space-y-8">
           <div className="bg-card rounded-xl border border-border-light overflow-hidden">
             <div className="p-6 border-b border-border-light flex items-center justify-between">
@@ -182,7 +181,7 @@ const DashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* Sidebar Area */}
+        {}
         <motion.div variants={item} className="space-y-6">
           <div className="bg-card p-6 rounded-xl border border-border-light">
             <h2 className="text-lg font-bold mb-4">Quick Actions</h2>

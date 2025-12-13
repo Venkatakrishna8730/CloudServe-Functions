@@ -40,7 +40,7 @@ const LandingPage = () => {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
+        {}
         <section className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex flex-col justify-center py-12 md:py-20 px-4 md:px-6 text-center max-w-5xl mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -81,7 +81,7 @@ const LandingPage = () => {
           </motion.div>
         </section>
 
-        {/* Features Grid */}
+        {}
         <section className="py-12 md:py-20 px-4 md:px-6 bg-card/50">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard

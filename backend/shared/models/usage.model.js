@@ -22,7 +22,7 @@ const usageSchema = new mongoose.Schema(
     },
     memoryUsed: {
       type: Number,
-      default: 0, // In MB, placeholder for now
+      default: 0, 
     },
     timestamp: {
       type: Date,

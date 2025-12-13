@@ -57,6 +57,20 @@ export const updateFunction = createAsyncThunk(
   }
 );
 
+export const redeployFunction = createAsyncThunk(
+  "functions/redeployFunction",
+  async (functionId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(ROUTES.FUNCTIONS.REDEPLOY(functionId));
+      return { id: functionId, status: data.status };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to redeploy function"
+      );
+    }
+  }
+);
+
 const functionsSlice = createSlice({
   name: "functions",
   initialState: {
@@ -71,7 +85,7 @@ const functionsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Functions
+      
       .addCase(fetchFunctions.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -84,19 +98,26 @@ const functionsSlice = createSlice({
         state.loading = false;
         state.error = action.payload?.message || "Failed to fetch functions";
       })
-      // Create Function
+      
       .addCase(createFunction.fulfilled, (state, action) => {
         state.list.push(action.payload);
       })
-      // Delete Function
+      
       .addCase(deleteFunction.fulfilled, (state, action) => {
         state.list = state.list.filter((f) => f._id !== action.payload);
       })
-      // Update Function
+      
       .addCase(updateFunction.fulfilled, (state, action) => {
         const index = state.list.findIndex((f) => f._id === action.payload._id);
         if (index !== -1) {
           state.list[index] = action.payload;
+        }
+      })
+      
+      .addCase(redeployFunction.fulfilled, (state, action) => {
+        const index = state.list.findIndex((f) => f._id === action.payload.id);
+        if (index !== -1) {
+          state.list[index].status = action.payload.status;
         }
       });
   },

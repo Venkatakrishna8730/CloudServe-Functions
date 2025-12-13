@@ -14,7 +14,7 @@ const DashboardLayout = () => {
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />
 
-      {/* Mobile Sidebar Overlay */}
+      {}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-[9998] md:hidden"
@@ -22,9 +22,9 @@ const DashboardLayout = () => {
         />
       )}
 
-      {/* Main Content */}
+      {}
       <div className="flex flex-col min-h-dvh md:h-dvh md:pl-16 relative z-0">
-        {/* Mobile Header */}
+        {}
         <header className="md:hidden h-16 bg-card border-b border-border-light flex items-center px-4 shrink-0">
           <button
             className="text-text-secondary"

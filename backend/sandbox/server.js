@@ -10,12 +10,12 @@ import { executeFunction } from "./sandbox.runner.js";
 
 const app = express();
 
-// Increase payload limit for code/context
+
 app.use(express.json({ limit: "50mb" }));
 
 app.post("/execute", async (req, res) => {
   try {
-    const { code, context } = req.body;
+    const { code, context, depHash } = req.body;
 
     if (!code) {
       return res.status(400).json({
@@ -25,8 +25,8 @@ app.post("/execute", async (req, res) => {
       });
     }
 
-    // Execute the code using the existing runner logic
-    const result = await executeFunction(code, context || {});
+    
+    const result = await executeFunction(code, context || {}, depHash);
     res.json(result);
   } catch (error) {
     console.error("Sandbox execution error:", error);

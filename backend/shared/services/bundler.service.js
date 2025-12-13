@@ -4,15 +4,12 @@ import path from "path";
 import os from "os";
 import { builtinModules } from "module";
 
-// Node built-ins to ignore
+
 const BUILTINS = new Set(builtinModules);
 
-/**
- * Extract dependencies using esbuild metafile.
- * Robust for JS and TS.
- */
+
 const extractDependencies = async (code, tempDir) => {
-  const entryFile = path.join(tempDir, "scan.ts"); // Use .ts to allow TS syntax
+  const entryFile = path.join(tempDir, "scan.ts"); 
   fs.writeFileSync(entryFile, code);
 
   try {
@@ -24,7 +21,7 @@ const extractDependencies = async (code, tempDir) => {
       platform: "node",
       target: "node18",
       loader: { ".ts": "ts", ".js": "js" },
-      external: ["*"], // Mark everything external to catch imports
+      external: ["*"], 
     });
 
     const deps = new Set();
@@ -49,18 +46,16 @@ const extractDependencies = async (code, tempDir) => {
   }
 };
 
-/**
- * Main bundler function
- */
+
 const bundleCode = async (code) => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "func-"));
 
   try {
-    // 1. Extract dependencies
+    
     const dependencies = await extractDependencies(code, tempDir);
 
-    // 2. Bundle
-    // Detect TS to choose extension for bundling entry
+    
+    
     const isTS = /:\s*\w+|interface\s+\w+|type\s+\w+/.test(code);
     const entryFile = path.join(tempDir, isTS ? "index.ts" : "index.js");
     fs.writeFileSync(entryFile, code);
@@ -73,7 +68,7 @@ const bundleCode = async (code) => {
       format: "cjs",
       minify: true,
       write: false,
-      external: dependencies, // only external deps here
+      external: dependencies, 
       loader: {
         ".ts": "ts",
         ".js": "js",

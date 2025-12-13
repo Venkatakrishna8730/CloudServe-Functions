@@ -15,7 +15,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import { ToastProvider } from "./context/ToastContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
-// Pages
+
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -26,11 +26,12 @@ import FunctionDetailsPage from "./pages/FunctionDetailsPage";
 import ProfilePage from "./pages/ProfilePage";
 import DocumentationPage from "./pages/DocumentationPage";
 
-// Function Details Components
+
 import FunctionOverview from "./components/function/FunctionOverview";
 import FunctionEditor from "./components/function/FunctionEditor";
 import FunctionLogs from "./components/function/FunctionLogs";
 import FunctionSettings from "./components/function/FunctionSettings";
+import BouncingLoader from "./components/ui/CloudDeployAnimation";
 
 const AppContent = () => {
   const dispatch = useDispatch();
@@ -42,8 +43,9 @@ const AppContent = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-primary">
-        Loading...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-primary gap-4">
+        {}
+        <BouncingLoader />
       </div>
     );
   }
@@ -51,21 +53,21 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
+        {}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Route>
 
-        {/* Protected Routes */}
+        {}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/functions" element={<FunctionsListPage />} />
             <Route path="/functions/create" element={<CreateFunctionPage />} />
 
-            {/* Function Details with Sub-routes */}
+            {}
             <Route
               path="/functions/:functionId"
               element={<FunctionDetailsPage />}

@@ -35,10 +35,10 @@ export const initMinio = async () => {
 };
 
 export const uploadOriginalCode = async (functionId, files) => {
-  // files is an array of { path: string, content: string | Buffer }
-  // or an object with file paths as keys and content as values?
-  // Let's assume files is an array of objects for flexibility: { name: "index.js", content: "..." }
-  // The path in MinIO will be: functions/<functionId>/src/<fileName>
+  
+  
+  
+  
 
   const uploads = files.map((file) => {
     const objectName = `${functionId}/src/${file.name}`;
@@ -69,7 +69,7 @@ export const readOriginalFiles = async (functionId) => {
   for await (const obj of stream) {
     const stream = await minioClient.getObject(BUCKET_NAME, obj.name);
     const content = await streamToString(stream);
-    // Extract relative filename from object name
+    
     const name = obj.name.replace(prefix, "");
     files.push({ name, content });
   }
@@ -97,7 +97,7 @@ export const readPackageJson = async (functionId) => {
   }
 };
 
-// Helper to convert stream to string
+
 const streamToString = (stream) => {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -121,7 +121,7 @@ export const deleteFunctionFolder = async (functionId) => {
   }
 };
 
-// Dependency Cache Methods
+
 export const uploadDependencyCache = async (functionId, cacheBuffer) => {
   const objectName = `${functionId}/cache/node_modules.tar.gz`;
   await minioClient.putObject(BUCKET_NAME, objectName, cacheBuffer);
@@ -132,7 +132,7 @@ export const readDependencyCache = async (functionId) => {
   const objectName = `${functionId}/cache/node_modules.tar.gz`;
   try {
     const stream = await minioClient.getObject(BUCKET_NAME, objectName);
-    return stream; // Return stream for piping
+    return stream; 
   } catch (error) {
     if (error.code === "NoSuchKey") {
       return null;
@@ -146,8 +146,54 @@ export const deleteDependencyCache = async (functionId) => {
   try {
     await minioClient.removeObject(BUCKET_NAME, objectName);
   } catch (error) {
-    // Ignore if not found
+    
     console.warn(`Failed to delete cache for ${functionId}:`, error.message);
+  }
+};
+
+
+export const checkDependencyBundle = async (depHash) => {
+  const objectName = `deps/${depHash}/node_modules.tar.gz`;
+  try {
+    await minioClient.statObject(BUCKET_NAME, objectName);
+    return true;
+  } catch (error) {
+    if (error.code === "NoSuchKey" || error.code === "NotFound") {
+      return false;
+    }
+    throw error;
+  }
+};
+
+export const uploadDependencyBundle = async (depHash, bundleBuffer) => {
+  const objectName = `deps/${depHash}/node_modules.tar.gz`;
+  await minioClient.putObject(BUCKET_NAME, objectName, bundleBuffer);
+
+  
+  const metadataName = `deps/${depHash}/metadata.json`;
+  const metadata = {
+    createdAt: new Date().toISOString(),
+    hash: depHash,
+  };
+  await minioClient.putObject(
+    BUCKET_NAME,
+    metadataName,
+    JSON.stringify(metadata)
+  );
+
+  return objectName;
+};
+
+export const readDependencyBundle = async (depHash) => {
+  const objectName = `deps/${depHash}/node_modules.tar.gz`;
+  try {
+    const stream = await minioClient.getObject(BUCKET_NAME, objectName);
+    return stream;
+  } catch (error) {
+    if (error.code === "NoSuchKey" || error.code === "NotFound") {
+      return null;
+    }
+    throw error;
   }
 };
 
@@ -163,4 +209,7 @@ export default {
   uploadDependencyCache,
   readDependencyCache,
   deleteDependencyCache,
+  checkDependencyBundle,
+  uploadDependencyBundle,
+  readDependencyBundle,
 };

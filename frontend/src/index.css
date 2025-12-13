@@ -1,29 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  /* Light Mode Defaults */
+  
   --primary: #ffb400;
   --primary-hover: #e6a200;
   --primary-press: #cc9000;
 
   --background: #ffffff;
-  --card: #f9fafb; /* Gray 50 */
-  --background-hover: #f3f4f6; /* Gray 100 */
+  --card: #f9fafb; 
+  --background-hover: #f3f4f6; 
 
-  --text-primary: #111827; /* Gray 900 */
-  --text-secondary: #4b5563; /* Gray 600 */
-  --text-muted: #9ca3af; /* Gray 400 */
+  --text-primary: #111827; 
+  --text-secondary: #4b5563; 
+  --text-muted: #9ca3af; 
 
-  --border-light: #e5e7eb; /* Gray 200 */
-  --border-heavy: #d1d5db; /* Gray 300 */
+  --border-light: #e5e7eb; 
+  --border-heavy: #d1d5db; 
 
-  --success: #16a34a; /* Green 600 */
-  --error: #dc2626; /* Red 600 */
-  --warning: #d97706; /* Amber 600 */
+  --success: #16a34a; 
+  --error: #dc2626; 
+  --warning: #d97706; 
 }
 
 .dark {
-  /* Dark Mode Overrides */
+  
   --primary: #ffb400;
   --primary-hover: #ffa000;
   --primary-press: #ff8f00;
@@ -79,4 +79,31 @@ body {
 
 button {
   cursor: pointer;
+}
+@keyframes bounce-dot {
+  from {
+    transform: translateY(12px) scaleX(1.4);
+  }
+  to {
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+@keyframes bounce-shadow {
+  from {
+    transform: scaleX(1.4);
+    opacity: 0.6;
+  }
+  to {
+    transform: scaleX(0.6);
+    opacity: 0.3;
+  }
+}
+
+.animate-bounce-dot {
+  animation: bounce-dot 0.6s ease-in-out infinite alternate;
+}
+
+.animate-bounce-shadow {
+  animation: bounce-shadow 0.6s ease-in-out infinite alternate;
 }

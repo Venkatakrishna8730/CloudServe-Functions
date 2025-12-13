@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import { ROUTES } from "../../utils/api";
 
-// Async Thunks
+
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
   async (_, { rejectWithValue }) => {
@@ -20,7 +20,7 @@ export const login = createAsyncThunk(
   async ({ email, password }, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await api.post(ROUTES.AUTH.LOGIN, { email, password });
-      // After successful login, fetch user details
+      
       dispatch(checkAuth());
       return data;
     } catch (error) {
@@ -34,7 +34,7 @@ export const signup = createAsyncThunk(
   async (userData, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await api.post(ROUTES.AUTH.SIGNUP, userData);
-      // Do not checkAuth here, wait for verification
+      
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Signup failed");
@@ -123,7 +123,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Check Auth
+      
       .addCase(checkAuth.pending, (state) => {
         state.loading = true;
       })
@@ -135,53 +135,53 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = null;
       })
-      // Login
+      
       .addCase(login.pending, (state) => {
         state.error = null;
       })
       .addCase(login.fulfilled, () => {
-        // User is set by checkAuth
+        
       })
       .addCase(login.rejected, (state, action) => {
         state.error = action.payload?.message || "Login failed";
       })
-      // Signup
+      
       .addCase(signup.pending, (state) => {
         state.error = null;
       })
       .addCase(signup.fulfilled, () => {
-        // User is set by checkAuth
+        
       })
       .addCase(signup.rejected, (state, action) => {
         state.error = action.payload?.message || "Signup failed";
       })
-      // Verify Email
+      
       .addCase(verifyEmail.pending, (state) => {
         state.error = null;
       })
       .addCase(verifyEmail.fulfilled, () => {
-        // User is set by checkAuth
+        
       })
       .addCase(verifyEmail.rejected, (state, action) => {
         state.error = action.payload?.message || "Verification failed";
       })
-      // Logout
+      
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.error = null;
       })
-      // Regenerate API Key
+      
       .addCase(regenerateApiKey.fulfilled, (state, action) => {
         if (state.user) {
           state.user.apiKey = action.payload;
         }
       })
-      // Google Login
+      
       .addCase(googleLogin.pending, (state) => {
         state.error = null;
       })
       .addCase(googleLogin.fulfilled, () => {
-        // User is set by checkAuth
+        
       })
       .addCase(googleLogin.rejected, (state, action) => {
         state.error = action.payload?.message || "Google login failed";

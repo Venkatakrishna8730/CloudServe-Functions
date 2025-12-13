@@ -6,6 +6,7 @@ import {
   getFunctionWithId,
   deleteFunction,
   updateFunction,
+  redeployFunction,
 } from "../controllers/function.controller.js";
 
 const functionsRoute = express.Router();
@@ -15,5 +16,6 @@ functionsRoute.get("/functions", withAuth(getFunctions));
 functionsRoute.get("/functions/:id", withAuth(getFunctionWithId));
 functionsRoute.put("/functions/:id", withAuth(updateFunction));
 functionsRoute.delete("/functions/:id", withAuth(deleteFunction));
+functionsRoute.post("/functions/:id/redeploy", withAuth(redeployFunction));
 
 export default functionsRoute;

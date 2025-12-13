@@ -2,7 +2,16 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchFunctions } from "../store/slices/functionsSlice";
-import { Plus, Search, ArrowRight } from "lucide-react";
+import {
+  Plus,
+  Search,
+  ArrowRight,
+  Loader2,
+  CheckCircle,
+  XCircle,
+  RotateCcw,
+} from "lucide-react";
+import CloudDeployAnimation from "../components/ui/CloudDeployAnimation";
 
 const FunctionsListPage = () => {
   const dispatch = useDispatch();
@@ -11,7 +20,19 @@ const FunctionsListPage = () => {
 
   useEffect(() => {
     dispatch(fetchFunctions());
-  }, [dispatch]);
+
+    
+    const interval = setInterval(() => {
+      const hasDeploying = list.some(
+        (f) => f.status === "deploying" || f.status === "pending"
+      );
+      if (hasDeploying && !loading) {
+        dispatch(fetchFunctions());
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [dispatch, list, loading]);
 
   const filteredList = list.filter((func) =>
     func.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -35,7 +56,7 @@ const FunctionsListPage = () => {
         </Link>
       </header>
 
-      {/* Filters & Search */}
+      {}
       <div className="mb-6 flex items-center gap-4 bg-card p-2 rounded-lg border border-border-light max-w-md">
         <Search size={20} className="text-text-muted ml-2" />
         <input
@@ -47,9 +68,12 @@ const FunctionsListPage = () => {
         />
       </div>
 
-      {/* Functions List */}
-      {loading ? (
-        <div className="text-center py-20 text-text-secondary">Loading...</div>
+      {}
+      {loading && list.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-text-secondary gap-4">
+          <CloudDeployAnimation size="lg" />
+          <p className="animate-pulse">Loading functions...</p>
+        </div>
       ) : error ? (
         <div className="text-center py-20 text-error">{error}</div>
       ) : filteredList.length === 0 ? (
@@ -86,12 +110,47 @@ const FunctionsListPage = () => {
                     <span className="px-2 py-0.5 rounded text-xs font-bold bg-success/20 text-success">
                       v{func.version}
                     </span>
+
+                    {}
+                    <span
+                      className={`flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded border ${
+                        func.isActive
+                          ? "border-success/30 text-success bg-success/5"
+                          : "border-text-muted/30 text-text-muted bg-text-muted/5"
+                      }`}
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          func.isActive ? "bg-success" : "bg-text-muted"
+                        }`}
+                      />
+                      {func.isActive ? "Enabled" : "Disabled"}
+                    </span>
+
+                    {}
+                    {(func.status === "deploying" ||
+                      func.status === "pending") && (
+                      <span className="flex items-center gap-1 text-xs text-primary font-bold bg-primary/10 px-2 py-0.5 rounded">
+                        <Loader2 size={12} className="animate-spin" />
+                        Deploying
+                      </span>
+                    )}
+                    {func.status === "failed" && (
+                      <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-1 text-xs text-error font-bold bg-error/10 px-2 py-0.5 rounded">
+                          <XCircle size={12} />
+                          Failed
+                        </span>
+                      </div>
+                    )}
+                    {func.status === "active" && (
+                      <span className="flex items-center gap-1 text-xs text-success font-bold bg-success/10 px-2 py-0.5 rounded">
+                        <CheckCircle size={12} />
+                        Deployed
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-text-secondary">
-                    <span className="flex items-center gap-1">
-                      Runtime: Node.js
-                    </span>
-                    <span className="hidden sm:inline">•</span>
                     <span>
                       Last executed:{" "}
                       {func.stats?.lastExecuted

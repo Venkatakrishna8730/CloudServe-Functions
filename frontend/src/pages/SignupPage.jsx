@@ -19,7 +19,7 @@ const SignupPage = () => {
     password: "",
   });
   const [verificationCode, setVerificationCode] = useState("");
-  const [step, setStep] = useState("signup"); // 'signup' or 'verify'
+  const [step, setStep] = useState("signup"); 
 
   const dispatch = useDispatch();
   const { error, user } = useSelector((state) => state.auth);
@@ -31,7 +31,7 @@ const SignupPage = () => {
       navigate("/dashboard");
     }
 
-    // Check for redirect from login page for verification
+    
     if (location.state?.verify && location.state?.email) {
       setFormData((prev) => ({ ...prev, email: location.state.email }));
       setStep("verify");
@@ -72,7 +72,7 @@ const SignupPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Animations */}
+      {}
       <motion.div
         animate={{
           scale: [1, 1.2, 1],

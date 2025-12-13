@@ -6,6 +6,7 @@ import { AlertCircle, ArrowLeft, Save, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import { useToast } from "../context/ToastContext";
+import { useTheme } from "../context/ThemeContext";
 
 const JS_TEMPLATE = `module.exports = async (event) => {
   // Your function logic here
@@ -35,6 +36,7 @@ export const handler = async (event: Event): Promise<Response> => {
 
 const CreateFunctionPage = () => {
   const [name, setName] = useState("");
+  const { theme } = useTheme();
   const [code, setCode] = useState(JS_TEMPLATE);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -42,8 +44,6 @@ const CreateFunctionPage = () => {
   const toast = useToast();
 
   const [language, setLanguage] = useState("javascript");
-
-  // Language is now manually selected via dropdown
 
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
@@ -73,7 +73,7 @@ const CreateFunctionPage = () => {
       );
       if (createFunction.fulfilled.match(resultAction)) {
         navigate("/functions");
-        toast.success("Function created successfully");
+        toast.success("Deployment started. Check status in list.");
       } else {
         toast.error(
           resultAction.payload?.message || "Failed to create function"
@@ -95,7 +95,6 @@ const CreateFunctionPage = () => {
       return;
     }
 
-    // Set language based on file extension
     if (file.name.endsWith(".ts")) {
       setLanguage("typescript");
     } else {
@@ -145,7 +144,6 @@ const CreateFunctionPage = () => {
         </div>
 
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-          {/* Settings Sidebar */}
           <div className="w-full lg:w-80 p-6 border-b lg:border-b-0 lg:border-r border-border-light bg-background overflow-y-auto">
             <div className="space-y-6">
               <div>
@@ -180,7 +178,6 @@ const CreateFunctionPage = () => {
             </div>
           </div>
 
-          {/* Editor Area */}
           <div className="flex-1 flex flex-col min-h-[400px]">
             <div className="px-4 py-2 bg-background border-b border-border-light text-xs font-mono text-text-secondary flex items-center justify-between">
               <span>{language === "typescript" ? "index.ts" : "index.js"}</span>
@@ -197,7 +194,7 @@ const CreateFunctionPage = () => {
               <Editor
                 height="100%"
                 language={language}
-                theme="vs-dark"
+                theme={theme === "dark" ? "vs-dark" : "light"}
                 value={code}
                 onChange={(value) => setCode(value)}
                 options={{

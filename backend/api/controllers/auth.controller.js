@@ -50,7 +50,7 @@ const signupController = async (req, res) => {
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-    const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+    const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); 
 
     const newUser = new User({
       fullName,
@@ -155,7 +155,7 @@ const resendVerificationController = async (req, res) => {
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-    const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+    const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); 
 
     user.verificationCode = verificationCode;
     user.verificationCodeExpires = verificationCodeExpires;

@@ -33,7 +33,7 @@ const FunctionSettings = () => {
 
   return (
     <div className="w-full space-y-8 relative">
-      {/* Delete Confirmation Modal */}
+      {}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-card border border-border-light rounded-xl shadow-2xl p-6 max-w-md w-full animate-in fade-in zoom-in duration-200">
@@ -100,7 +100,7 @@ const FunctionSettings = () => {
         </div>
       )}
 
-      {/* General Settings */}
+      {}
       <div className="bg-card rounded-xl border border-border-light overflow-hidden">
         <div className="p-6 border-b border-border-light">
           <h2 className="text-xl font-bold">General Settings</h2>
@@ -126,7 +126,7 @@ const FunctionSettings = () => {
         </div>
       </div>
 
-      {/* Function Status */}
+      {}
       <div className="bg-card rounded-xl border border-border-light overflow-hidden">
         <div className="p-6 border-b border-border-light">
           <h2 className="text-xl font-bold">Function Status</h2>
@@ -166,7 +166,7 @@ const FunctionSettings = () => {
         </div>
       </div>
 
-      {/* Danger Zone */}
+      {}
       <div className="rounded-xl border border-error/20 overflow-hidden">
         <div className="p-6 border-b border-error/20">
           <h2 className="text-xl font-bold text-error flex items-center gap-2">

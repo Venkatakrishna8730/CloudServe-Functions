@@ -79,10 +79,10 @@ const DocumentationPage = () => {
       </header>
 
       <div ref={containerRef} className="relative">
-        {/* Static Background Line */}
+        {}
         <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-border-light/30 hidden md:block" />
 
-        {/* Animated Beam */}
+        {}
         <motion.div
           style={{ scaleY }}
           className="absolute left-1/2 transform -translate-x-1/2 top-0 h-full w-1 bg-gradient-to-b from-primary via-purple-500 to-primary origin-top hidden md:block shadow-[0_0_20px_2px_rgba(168,85,247,0.6)]"
@@ -102,7 +102,7 @@ const DocumentationPage = () => {
                   isEven ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
-                {/* Content Side */}
+                {}
                 <div
                   className={`flex-1 ${
                     isEven ? "md:pr-16" : "md:pl-16"
@@ -122,12 +122,12 @@ const DocumentationPage = () => {
                   </p>
                 </div>
 
-                {/* Timeline Dot */}
+                {}
                 <div className="relative z-10 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-card border-4 border-background shadow-xl">
                   <div className={`w-4 h-4 rounded-full ${step.color}`} />
                 </div>
 
-                {/* Image Side */}
+                {}
                 <div
                   className={`flex-1 ${
                     isEven ? "md:pl-16" : "md:pr-16"

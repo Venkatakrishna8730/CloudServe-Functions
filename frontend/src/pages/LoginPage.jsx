@@ -46,7 +46,7 @@ const LoginPage = () => {
 
   const handleResendVerification = () => {
     if (email) {
-      // Optimistic navigation
+      
       navigate("/signup", { state: { email, verify: true } });
       toast.info("Sending verification email...", 2000);
 
@@ -63,7 +63,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Animations */}
+      {}
       <motion.div
         animate={{
           scale: [1, 1.2, 1],

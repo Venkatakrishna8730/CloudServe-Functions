@@ -8,22 +8,23 @@ import {
   readBundle,
   readDependencyCache,
   uploadDependencyCache,
+  readDependencyBundle,
 } from "../shared/services/storage.service.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export const executeFunction = (functionId, context) => {
+export const executeFunction = (functionId, context, depHash = null) => {
   return new Promise(async (resolve) => {
-    // 1. Create a temp directory
+    
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "sandbox-"));
 
     try {
-      // 2. Fetch bundled code
+      
       const bundledCode = await readBundle(functionId);
       const codeFilePath = path.join(tempDir, "index.js");
       fs.writeFileSync(codeFilePath, bundledCode);
 
-      // 3. Fetch package.json (created during deploy)
+      
       const packageJsonContent = await readPackageJson(functionId);
 
       if (packageJsonContent) {
@@ -32,36 +33,67 @@ export const executeFunction = (functionId, context) => {
           packageJsonContent
         );
 
-        // Try to fetch dependency cache
+        
         let cacheHit = false;
-        try {
-          const cacheStream = await readDependencyCache(functionId);
-          if (cacheStream) {
-            const tarPath = path.join(tempDir, "node_modules.tar.gz");
-            const writeStream = fs.createWriteStream(tarPath);
 
-            await new Promise((resolve, reject) => {
-              cacheStream.pipe(writeStream);
-              writeStream.on("finish", resolve);
-              writeStream.on("error", reject);
-            });
+        
+        if (depHash) {
+          try {
+            console.log(`Trying to fetch global dependency bundle: ${depHash}`);
+            const cacheStream = await readDependencyBundle(depHash);
+            if (cacheStream) {
+              const tarPath = path.join(tempDir, "node_modules.tar.gz");
+              const writeStream = fs.createWriteStream(tarPath);
 
-            execSync("tar -xzf node_modules.tar.gz", { cwd: tempDir });
-            cacheHit = true;
+              await new Promise((resolve, reject) => {
+                cacheStream.pipe(writeStream);
+                writeStream.on("finish", resolve);
+                writeStream.on("error", reject);
+              });
+
+              execSync("tar -xzf node_modules.tar.gz", { cwd: tempDir });
+              cacheHit = true;
+              console.log("Global dependency bundle loaded.");
+            }
+          } catch (err) {
+            console.warn("Global bundle fetch failed:", err.message);
           }
-        } catch (err) {
-          console.warn("Cache fetch failed:", err.message);
+        }
+
+        
+        if (!cacheHit) {
+          try {
+            console.log("Falling back to legacy/local cache...");
+            const cacheStream = await readDependencyCache(functionId);
+            if (cacheStream) {
+              const tarPath = path.join(tempDir, "node_modules.tar.gz");
+              const writeStream = fs.createWriteStream(tarPath);
+
+              await new Promise((resolve, reject) => {
+                cacheStream.pipe(writeStream);
+                writeStream.on("finish", resolve);
+                writeStream.on("error", reject);
+              });
+
+              execSync("tar -xzf node_modules.tar.gz", { cwd: tempDir });
+              cacheHit = true;
+            }
+          } catch (err) {
+            console.warn("Legacy cache fetch failed:", err.message);
+          }
         }
 
         if (!cacheHit) {
           try {
-            // 4. Install dependencies inside tempDir
-            execSync("npm install --production", {
+            
+            console.log("Installing dependencies (cache miss)...");
+            execSync("npm install --production --ignore-scripts", {
               cwd: tempDir,
               stdio: "ignore",
             });
 
-            // Create cache
+            
+            
             console.log("Creating dependency cache...");
             execSync("tar -czf node_modules.tar.gz node_modules", {
               cwd: tempDir,
@@ -77,7 +109,7 @@ export const executeFunction = (functionId, context) => {
         }
       }
 
-      // 5. Fork worker
+      
       const workerPath = path.join(__dirname, "sandbox.worker.js");
       const child = fork(workerPath);
 
@@ -95,7 +127,7 @@ export const executeFunction = (functionId, context) => {
         }
       }, 6000);
 
-      // 6. Handle worker messages
+      
       child.on("message", (message) => {
         if (!isDone) {
           clearTimeout(timeout);
@@ -128,7 +160,7 @@ export const executeFunction = (functionId, context) => {
         }
       });
 
-      // 7. Send only context + root path — NOT CODE
+      
       child.send({ type: "execute", context, root: tempDir });
     } catch (err) {
       resolve({

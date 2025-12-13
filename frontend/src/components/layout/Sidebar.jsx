@@ -59,7 +59,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
           : "-translate-x-full md:translate-x-0"
       )}
     >
-      {/* Header */}
+      {}
       <div className="h-16 flex items-center px-4 border-b border-border-light overflow-hidden whitespace-nowrap">
         <div className="flex items-center gap-3 min-w-max">
           <img src="/icon.png" alt="Logo" className="w-8 h-8 object-contain" />
@@ -78,7 +78,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
         </button>
       </div>
 
-      {/* User Info - Moved to Top */}
+      {}
       <div className="p-4 border-b border-border-light overflow-hidden whitespace-nowrap">
         <div className="flex items-center gap-3 min-w-max">
           <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shrink-0">
@@ -96,7 +96,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
         </div>
       </div>
 
-      {/* Navigation */}
+      {}
       <nav className="flex-1 p-2 space-y-2 overflow-y-auto overflow-x-hidden">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -129,7 +129,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
         })}
       </nav>
 
-      {/* Theme Toggle & Logout */}
+      {}
       <div className="p-4 border-t border-border-light overflow-hidden whitespace-nowrap space-y-2">
         <button
           onClick={toggleTheme}

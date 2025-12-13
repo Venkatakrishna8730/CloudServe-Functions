@@ -20,7 +20,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Gateway Routes
+
 app.use("/run", gatewayRouter);
 
 const PORT = process.env.GATEWAY_PORT || 5001;

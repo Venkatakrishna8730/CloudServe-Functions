@@ -5,9 +5,11 @@ import Editor from "@monaco-editor/react";
 import { Save, Play, AlertCircle, CheckCircle } from "lucide-react";
 import { updateFunction } from "../../store/slices/functionsSlice";
 import api, { ROUTES } from "../../utils/api";
+import { useTheme } from "../../context/ThemeContext";
 
 const FunctionEditor = () => {
   const { func } = useOutletContext();
+  const { theme } = useTheme();
   const dispatch = useDispatch();
   const [code, setCode] = useState("");
   const [isDirty, setIsDirty] = useState(false);
@@ -16,7 +18,7 @@ const FunctionEditor = () => {
 
   useEffect(() => {
     if (func?._id) {
-      // Always fetch to ensure we get the latest code and filename
+      
       fetchFunctionCode(func._id);
     }
   }, [func?._id]);
@@ -39,9 +41,9 @@ const FunctionEditor = () => {
 
   const [language, setLanguage] = useState("javascript");
 
-  // Language is manually selected or set by fetchFunctionCode
+  
 
-  // Language is manually selected
+  
 
   const handleEditorChange = (value) => {
     setCode(value);
@@ -53,14 +55,23 @@ const FunctionEditor = () => {
     setMessage(null);
     try {
       const filename = language === "typescript" ? "index.ts" : "index.js";
-      await dispatch(
+      const result = await dispatch(
         updateFunction({ id: func._id, data: { code, filename } })
       ).unwrap();
+
       setIsDirty(false);
-      setMessage({
-        type: "success",
-        text: "Function saved and deployed successfully!",
-      });
+
+      if (result.status === "failed") {
+        setMessage({
+          type: "error",
+          text: "Deployment failed. Check logs/status.",
+        });
+      } else {
+        setMessage({
+          type: "success",
+          text: "Function saved and deployed successfully!",
+        });
+      }
     } catch (error) {
       setMessage({
         type: "error",
@@ -76,7 +87,7 @@ const FunctionEditor = () => {
 
   return (
     <div className="flex flex-col h-[600px] md:h-full bg-card rounded-xl border border-border-light overflow-hidden">
-      {/* Toolbar */}
+      {}
       <div className="flex items-center justify-between px-4 py-2 border-b border-border-light bg-background gap-2">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-text-secondary">
@@ -125,12 +136,12 @@ const FunctionEditor = () => {
         </div>
       </div>
 
-      {/* Editor */}
+      {}
       <div className="flex-1 min-h-0">
         <Editor
           height="100%"
           language={language}
-          theme="vs-dark"
+          theme={theme === "dark" ? "vs-dark" : "light"}
           value={code}
           onChange={handleEditorChange}
           options={{

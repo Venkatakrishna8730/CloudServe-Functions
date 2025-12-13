@@ -19,7 +19,7 @@ process.on("message", async (message) => {
       wrapper: "commonjs",
     });
 
-    // Log capture
+    
     const formatLog = (args) =>
       args
         .map((arg) =>
@@ -38,7 +38,7 @@ process.on("message", async (message) => {
     try {
       const filePath = path.join(root, "index.js");
 
-      // Load bundled file through runFile() → THIS ENABLES require("axios")
+      
       const userModule = vm.runFile(filePath);
 
       let userFunc;
@@ -51,7 +51,7 @@ process.on("message", async (message) => {
       if (userFunc) result = await userFunc(context);
       else result = userModule;
 
-      // Serialize result safely
+      
       const safe = (x) => JSON.parse(JSON.stringify(x));
 
       process.send({

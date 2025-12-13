@@ -22,6 +22,7 @@ export const ROUTES = {
     DETAILS: (id) => `/functions/${id}`,
     UPDATE: (id) => `/functions/${id}`,
     DELETE: (id) => `/functions/${id}`,
+    REDEPLOY: (id) => `/functions/${id}/redeploy`,
   },
   LOGS: {
     GET: (id) => `/logs/${id}`,

@@ -42,7 +42,7 @@ const FunctionLogs = () => {
 
   useEffect(() => {
     fetchLogs();
-    const interval = setInterval(fetchLogs, 5000); // Auto-refresh every 5s
+    const interval = setInterval(fetchLogs, 5000); 
     return () => clearInterval(interval);
   }, [func?._id]);
 
@@ -50,7 +50,7 @@ const FunctionLogs = () => {
 
   return (
     <div className="flex flex-col h-full bg-card rounded-xl border border-border-light overflow-hidden relative">
-      {/* Confirmation Overlay */}
+      {}
       {showClearConfirm && (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-card border border-border-light rounded-xl shadow-2xl p-6 max-w-sm w-full animate-in fade-in zoom-in duration-200">
@@ -79,7 +79,7 @@ const FunctionLogs = () => {
         </div>
       )}
 
-      {/* Toolbar */}
+      {}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border-light bg-background">
         <h2 className="font-bold text-text-primary">Execution Logs</h2>
         <div className="flex items-center gap-2">
@@ -100,8 +100,8 @@ const FunctionLogs = () => {
         </div>
       </div>
 
-      {/* Logs View */}
-      <div className="flex-1 overflow-auto p-4 font-mono text-sm bg-[#0d0d0d]">
+      {}
+      <div className="flex-1 overflow-auto p-4 font-mono text-sm bg-background">
         {error && (
           <div className="text-error mb-4 flex items-center gap-2">
             <AlertCircle size={16} /> {error}

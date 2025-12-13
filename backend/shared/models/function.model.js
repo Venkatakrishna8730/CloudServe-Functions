@@ -15,7 +15,18 @@ const functionSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    // MinIO Storage Fields
+    status: {
+      type: String,
+      enum: ["pending", "deploying", "active", "failed"],
+      default: "pending",
+    },
+    deployError: {
+      type: String,
+    },
+    deployedAt: {
+      type: Date,
+    },
+    
     sourcePath: {
       type: String,
       required: true,
@@ -30,7 +41,11 @@ const functionSchema = new mongoose.Schema(
     },
     bundleHash: {
       type: String,
-      required: true,
+      required: false,
+    },
+    depHash: {
+      type: String,
+      required: false,
     },
     endpoint: {
       type: String,
