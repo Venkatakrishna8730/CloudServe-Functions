@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/venkatakrishna8730/cloudserve-api:latest
+          image: ghcr.io/venkatakrishna8730/cloudserve-api:wrong-image
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
