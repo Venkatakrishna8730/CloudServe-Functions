@@ -65,11 +65,31 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh """
-                    kubectl apply -f k8s/
-                """
+                script {
+                    try {
+                        echo 'Applying Kubernetes manifests...'
+                        sh 'kubectl apply -f k8s/'
+
+                        echo 'Waiting for deployments to become ready...'
+                        sh 'kubectl rollout status deployment/api-deployment --timeout=120s'
+                        sh 'kubectl rollout status deployment/gateway-deployment --timeout=120s'
+                        sh 'kubectl rollout status deployment/sandbox-deployment --timeout=120s'
+                        sh 'kubectl rollout status deployment/frontend-deployment --timeout=120s'
+
+                    } catch (err) {
+                        echo 'Deployment failed! Rolling back...'
+
+                        sh 'kubectl rollout undo deployment/api-deployment || true'
+                        sh 'kubectl rollout undo deployment/gateway-deployment || true'
+                        sh 'kubectl rollout undo deployment/sandbox-deployment || true'
+                        sh 'kubectl rollout undo deployment/frontend-deployment || true'
+
+                        throw err
+                    }
+                }
             }
         }
+
     }
 
     post {
