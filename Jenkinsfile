@@ -101,7 +101,7 @@ spec:
                 container('kubectl') {
                     script {
                         try {
-                            sh 'kubectl apply -f k8s/'
+                            sh 'kubectl apply -f k8s/ -n cloudserve'
 
                             sh 'kubectl rollout status deployment/api-deployment --timeout=120s'
                             sh 'kubectl rollout status deployment/gateway-deployment --timeout=120s'
