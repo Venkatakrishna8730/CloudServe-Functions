@@ -17,7 +17,7 @@ spec:
       mountPath: /var/run/docker.sock
 
   - name: kubectl
-    image: lachlanevenson/k8s-kubectl:latest
+    image: registry.k8s.io/kubectl:v1.29.0
     command:
     - cat
     tty: true
@@ -104,16 +104,16 @@ spec:
                         try {
                             sh 'kubectl apply -f k8s/ -n cloudserve'
 
-                            sh 'kubectl rollout status deployment/api-deployment --timeout=120s'
-                            sh 'kubectl rollout status deployment/gateway-deployment --timeout=120s'
-                            sh 'kubectl rollout status deployment/sandbox-deployment --timeout=120s'
-                            sh 'kubectl rollout status deployment/frontend-deployment --timeout=120s'
+                            sh 'kubectl rollout status deployment/api-deployment -n cloudserve --timeout=120s'
+                            sh 'kubectl rollout status deployment/gateway-deployment -n cloudserve --timeout=120s'
+                            sh 'kubectl rollout status deployment/sandbox-deployment -n cloudserve --timeout=120s'
+                            sh 'kubectl rollout status deployment/frontend-deployment -n cloudserve --timeout=120s'
 
                         } catch (err) {
-                            sh 'kubectl rollout undo deployment/api-deployment || true'
-                            sh 'kubectl rollout undo deployment/gateway-deployment || true'
-                            sh 'kubectl rollout undo deployment/sandbox-deployment || true'
-                            sh 'kubectl rollout undo deployment/frontend-deployment || true'
+                            sh 'kubectl rollout undo deployment/api-deployment -n cloudserve || true'
+                            sh 'kubectl rollout undo deployment/gateway-deployment -n cloudserve || true'
+                            sh 'kubectl rollout undo deployment/sandbox-deployment -n cloudserve || true'
+                            sh 'kubectl rollout undo deployment/frontend-deployment -n cloudserve || true'
                             throw err
                         }
                     }
