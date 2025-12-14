@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: sandbox
-          image: cloudserve-sandbox
-          imagePullPolicy: Never
+          image: ghcr.io/venkatakrishna8730/cloudserve-sandbox:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5002
           envFrom:

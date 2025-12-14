@@ -15,7 +15,6 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import { ToastProvider } from "./context/ToastContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
-
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -25,7 +24,6 @@ import CreateFunctionPage from "./pages/CreateFunctionPage";
 import FunctionDetailsPage from "./pages/FunctionDetailsPage";
 import ProfilePage from "./pages/ProfilePage";
 import DocumentationPage from "./pages/DocumentationPage";
-
 
 import FunctionOverview from "./components/function/FunctionOverview";
 import FunctionEditor from "./components/function/FunctionEditor";
@@ -44,7 +42,6 @@ const AppContent = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-primary gap-4">
-        {}
         <BouncingLoader />
       </div>
     );
@@ -53,21 +50,18 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Route>
 
-        {}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/functions" element={<FunctionsListPage />} />
             <Route path="/functions/create" element={<CreateFunctionPage />} />
 
-            {}
             <Route
               path="/functions/:functionId"
               element={<FunctionDetailsPage />}

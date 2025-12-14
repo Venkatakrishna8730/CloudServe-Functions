@@ -20,8 +20,9 @@ const FunctionsListPage = () => {
 
   useEffect(() => {
     dispatch(fetchFunctions());
+  }, [dispatch]);
 
-    
+  useEffect(() => {
     const interval = setInterval(() => {
       const hasDeploying = list.some(
         (f) => f.status === "deploying" || f.status === "pending"
@@ -68,7 +69,6 @@ const FunctionsListPage = () => {
         />
       </div>
 
-      {}
       {loading && list.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-text-secondary gap-4">
           <CloudDeployAnimation size="lg" />
@@ -79,7 +79,9 @@ const FunctionsListPage = () => {
       ) : filteredList.length === 0 ? (
         <div className="text-center py-20 bg-card rounded-xl border border-border-light">
           <h3 className="text-xl font-bold mb-2">
-            {searchQuery ? "No matching functions found" : "No functions yet"}
+            {searchQuery
+              ? "No matching functions found"
+              : "No functions deployed yet"}
           </h3>
           {!searchQuery && (
             <Link

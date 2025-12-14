@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: cloudserve-gateway
-          imagePullPolicy: Never
+          image: ghcr.io/venkatakrishna8730/cloudserve-gateway:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5001
           envFrom:
