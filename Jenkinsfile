@@ -17,7 +17,7 @@ spec:
       mountPath: /var/run/docker.sock
 
   - name: kubectl
-    image: registry.k8s.io/kubectl:v1.29.0
+    image: bitnami/kubectl:1.29
     command:
     - cat
     tty: true
