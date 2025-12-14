@@ -12,6 +12,7 @@ pipeline {
         FRONTEND_IMAGE = "${REGISTRY}/${GITHUB_USER}/cloudserve-frontend"
     }
 
+
     stages {
 
         stage('Checkout') {
