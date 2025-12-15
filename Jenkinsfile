@@ -98,8 +98,18 @@ spec:
         }
 
         stage('Deploy to Kubernetes') {
+            agent {
+                kubernetes {
+                    namespace 'cloudserve'
+                    serviceAccount 'jenkins-agent'
+                    defaultContainer 'kubectl'
+                    containerTemplate(name: 'docker', image: 'docker:24.0.7-cli', ttyEnabled: true)
+                    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:latest', ttyEnabled: true)
+                }
+            }
             steps {
                 container('kubectl') {
+                    checkout scm
                     script {
                         try {
                             sh 'kubectl apply -f k8s/ -n cloudserve'
