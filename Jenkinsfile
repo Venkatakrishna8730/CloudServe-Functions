@@ -33,7 +33,7 @@ spec:
       steps {
         container('docker') {
           sh '''
-          docker build -t test-image .
+          docker build -t cloudserve-api ./backend/api
           '''
         }
       }
