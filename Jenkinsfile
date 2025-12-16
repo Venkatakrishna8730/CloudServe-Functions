@@ -6,20 +6,19 @@ apiVersion: v1
 kind: Pod
 spec:
   serviceAccountName: jenkins
+
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    command:
-    - /busybox/cat
-    tty: true
+    args:
+      - "--help"
     volumeMounts:
     - name: docker-config
       mountPath: /kaniko/.docker
 
   - name: kubectl
-    image: lachlanevenson/k8s-kubectl:v1.28.4
-    command:
-    - cat
+    image: lachlanevenson/k8s-kubectl:latest
+    command: ["cat"]
     tty: true
 
   volumes:
