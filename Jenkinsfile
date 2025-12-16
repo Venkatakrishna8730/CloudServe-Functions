@@ -151,5 +151,5 @@ spec:
   //     kubectl rollout undo deployment/cloudserve-frontend -n cloudserve || true
   //     '''
   //   }
-  // }
+  }
 }
