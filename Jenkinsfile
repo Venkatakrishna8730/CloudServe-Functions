@@ -9,23 +9,21 @@ spec:
   serviceAccountName: jenkins
 
   containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:debug
-    command: ["/busybox/cat"]
-    tty: true
-    volumeMounts:
-    - name: docker-config
-      mountPath: /kaniko/.docker
-
   - name: kubectl
     image: lachlanevenson/k8s-kubectl:latest
     command: ["cat"]
     tty: true
 
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    command: ["/busybox/sh", "-c", "sleep infinity"]
+    volumeMounts:
+    - name: kaniko-docker-config
+      mountPath: /kaniko/.docker
+
   volumes:
-  - name: docker-config
-    secret:
-      secretName: ghcr-docker-config
+  - name: kaniko-docker-config
+    emptyDir: {}
 '''
     }
   }
@@ -56,12 +54,13 @@ spec:
             sh '''
             mkdir -p /kaniko/.docker
 
+            AUTH=$(echo -n "${GHCR_USER}:${GHCR_TOKEN}" | base64 | tr -d '\\n')
+            
             cat <<EOF > /kaniko/.docker/config.json
             {
               "auths": {
                 "ghcr.io": {
-                  "username": "${GHCR_USER}",
-                  "password": "${GHCR_TOKEN}"
+                  "auth": "${AUTH}"
                 }
               }
             }
@@ -70,7 +69,7 @@ spec:
             /kaniko/executor \
               --dockerfile=backend/api/Dockerfile \
               --context=dir://$(pwd)/backend \
-              --destination=ghcr.io/${GHCR_USER}/cloudserve-api:latest
+              --destination=ghcr.io/$(echo ${GHCR_USER} | tr '[:upper:]' '[:lower:]')/cloudserve-api:latest
             '''
           }
         }
