@@ -9,15 +9,17 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    command: ["cat"]
+    command:
+    - /busybox/cat
     tty: true
     volumeMounts:
     - name: docker-config
       mountPath: /kaniko/.docker
 
   - name: kubectl
-    image: lachlanevenson/k8s-kubectl:v1.29.2
-    command: ["cat"]
+    image: lachlanevenson/k8s-kubectl:v1.28.4
+    command:
+    - cat
     tty: true
 
   volumes:
