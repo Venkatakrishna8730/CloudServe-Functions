@@ -1,0 +1,38 @@
+controller:
+  image:
+    registry: docker.io
+    repository: jenkins/jenkins
+    tag: lts
+    pullPolicy: IfNotPresent
+
+  admin:
+    existingSecret: jenkins-admin-secret
+    userKey: jenkins-admin-user
+    passwordKey: jenkins-admin-password
+
+  serviceType: NodePort
+
+  persistence:
+    enabled: true
+    existingClaim: jenkins-pvc
+
+  serviceAccount:
+    create: true
+    name: jenkins
+
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - docker-workflow
+    - credentials-binding
+    - github
+
+  JCasC:
+    enabled: true
+
+  tests:
+    enabled: false
+
+agent:
+  enabled: true

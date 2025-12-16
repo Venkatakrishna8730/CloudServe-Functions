@@ -1,36 +1,18 @@
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: jenkins-role
+  name: jenkins
   namespace: jenkins
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: jenkins
 rules:
   - apiGroups: [""]
     resources:
       - pods
-      - pods/exec
       - pods/log
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - delete
-
-  - apiGroups: ["apps"]
-    resources:
-      - deployments
-      - replicasets
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-
-  - apiGroups: [""]
-    resources:
       - services
       - configmaps
       - secrets
@@ -39,32 +21,44 @@ rules:
       - list
       - watch
       - create
-      - update
-      - patch
       - delete
+      - patch
+      - update
 
-  - apiGroups: ["networking.k8s.io"]
+  - apiGroups: ["apps"]
     resources:
-      - ingresses
+      - deployments
+      - replicasets
+      - statefulsets
     verbs:
       - get
       - list
       - watch
       - create
-      - update
+      - delete
       - patch
+      - update
+
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - get
+      - list
+      - watch
+      - create
       - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: jenkins-rolebinding
-  namespace: jenkins
+  name: jenkins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: jenkins
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: jenkins
     namespace: jenkins
-roleRef:
-  kind: Role
-  name: jenkins-role
-  apiGroup: rbac.authorization.k8s.io
