@@ -44,38 +44,38 @@ spec:
     }
 
     stage('Build API Image') {
-  steps {
-    container('kaniko') {
-      withCredentials([
-        usernamePassword(
-          credentialsId: 'ghcr-creds',
-          usernameVariable: 'GHCR_USER',
-          passwordVariable: 'GHCR_TOKEN'
-        )
-      ]) {
-        sh '''
-        mkdir -p /kaniko/.docker
+      steps {
+        container('kaniko') {
+          withCredentials([
+            usernamePassword(
+              credentialsId: 'ghcr-creds',
+              usernameVariable: 'GHCR_USER',
+              passwordVariable: 'GHCR_TOKEN'
+            )
+          ]) {
+            sh '''
+            mkdir -p /kaniko/.docker
 
-        cat <<EOF > /kaniko/.docker/config.json
-        {
-          "auths": {
-            "ghcr.io": {
-              "username": "${GHCR_USER}",
-              "password": "${GHCR_TOKEN}"
+            cat <<EOF > /kaniko/.docker/config.json
+            {
+              "auths": {
+                "ghcr.io": {
+                  "username": "${GHCR_USER}",
+                  "password": "${GHCR_TOKEN}"
+                }
+              }
             }
+            EOF
+
+            /kaniko/executor \
+              --dockerfile=backend/api/Dockerfile \
+              --context=dir://$(pwd)/backend \
+              --destination=ghcr.io/${GHCR_USER}/cloudserve-api:latest
+            '''
           }
         }
-        EOF
-
-        /kaniko/executor \
-          --dockerfile=backend/api/Dockerfile \
-          --context=dir://$(pwd)/backend \
-          --destination=ghcr.io/${GHCR_USER}/cloudserve-api:latest
-        '''
       }
     }
-  }
-}
 
     // stage('Build API') {
     //   steps {
