@@ -202,10 +202,10 @@ spec:
 
             kubectl apply -n ${NAMESPACE} -f k8s/
 
-            kubectl rollout status deployment/cloudserve-api -n ${NAMESPACE} --timeout=120s
-            kubectl rollout status deployment/cloudserve-gateway -n ${NAMESPACE} --timeout=120s
-            kubectl rollout status deployment/cloudserve-sandbox -n ${NAMESPACE} --timeout=120s
-            kubectl rollout status deployment/cloudserve-frontend -n ${NAMESPACE} --timeout=120s
+            kubectl rollout status deployment/api-deployment -n ${NAMESPACE} --timeout=120s
+            kubectl rollout status deployment/gateway-deployment -n ${NAMESPACE} --timeout=120s
+            kubectl rollout status deployment/sandbox-deployment -n ${NAMESPACE} --timeout=120s
+            kubectl rollout status deployment/frontend-deployment -n ${NAMESPACE} --timeout=120s
             '''
           }
         }
@@ -219,10 +219,10 @@ spec:
         sh '''
         echo "Deployment failed — rolling back..."
 
-        kubectl rollout undo deployment/cloudserve-api -n cloudserve || true
-        kubectl rollout undo deployment/cloudserve-gateway -n cloudserve || true
-        kubectl rollout undo deployment/cloudserve-sandbox -n cloudserve || true
-        kubectl rollout undo deployment/cloudserve-frontend -n cloudserve || true
+        kubectl rollout undo deployment/api-deployment -n cloudserve || true
+        kubectl rollout undo deployment/gateway-deployment -n cloudserve || true
+        kubectl rollout undo deployment/sandbox-deployment -n cloudserve || true
+        kubectl rollout undo deployment/frontend-deployment -n cloudserve || true
         '''
       }
     }
