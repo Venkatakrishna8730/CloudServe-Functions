@@ -27,7 +27,4 @@ build
 
 .vscode/
 
-commands
 
-heavy.js
-heavy.ts
