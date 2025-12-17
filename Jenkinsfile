@@ -221,6 +221,7 @@ spec:
         }
       }
     }
+  }
 
   post {
     failure {
