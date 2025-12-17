@@ -202,6 +202,16 @@ spec:
 
             kubectl apply -n ${NAMESPACE} -f k8s/
 
+            kubectl scale deployment api-deployment -n ${NAMESPACE} --replicas=1
+            kubectl scale deployment gateway-deployment -n ${NAMESPACE} --replicas=1
+            kubectl scale deployment sandbox-deployment -n ${NAMESPACE} --replicas=1
+            kubectl scale deployment frontend-deployment -n ${NAMESPACE} --replicas=1
+
+            kubectl rollout restart deployment/api-deployment -n ${NAMESPACE}
+            kubectl rollout restart deployment/gateway-deployment -n ${NAMESPACE}
+            kubectl rollout restart deployment/sandbox-deployment -n ${NAMESPACE}
+            kubectl rollout restart deployment/frontend-deployment -n ${NAMESPACE}
+
             kubectl rollout status deployment/api-deployment -n ${NAMESPACE} --timeout=120s
             kubectl rollout status deployment/gateway-deployment -n ${NAMESPACE} --timeout=120s
             kubectl rollout status deployment/sandbox-deployment -n ${NAMESPACE} --timeout=120s
@@ -211,7 +221,6 @@ spec:
         }
       }
     }
-  }
 
   post {
     failure {
