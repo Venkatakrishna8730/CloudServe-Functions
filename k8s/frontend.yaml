@@ -28,6 +28,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: cloudserve
   name: frontend-service
 spec:
   selector:
